@@ -3,17 +3,23 @@ import openpyxl as xl
 import re
 from xlsxwriter.workbook import Workbook
 import logging
+import excel2json
 
 #setup logger
 logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%I:%M:%S')
+
+
+logging.warning(f"reading csv_file")
+csv_file = "/home/bhikkhu/Bodhirasa/Dropbox/Pāli English Dictionary/Pāli English Dictionary.csv"
+df = read_csv (csv_file, sep="\t")
 
 # # convert csv to excel
 
 # convert = input (f"convert csv to excel (y/n)? ")
 # if convert == "y":
 #     logging.warning(f"converting csv to excel sheet")
-#     csv_file = "/home/bhikkhu/Bodhirasa/Dropbox/dpd/dpd-full.csv"
-#     xlsx_file = "/home/bhikkhu/Bodhirasa/Dropbox/dpd/dpd-full.xlsx"
+#     csv_file = "/home/bhikkhu/Bodhirasa/Dropbox/Pāli English Dictionary/Pāli English Dictionary-full.csv"
+#     xlsx_file = "/home/bhikkhu/Bodhirasa/Dropbox/Pāli English Dictionary/Pāli English Dictionary-full.xlsx"
 #     workbook = Workbook(xlsx_file)
 #     worksheet = workbook.add_worksheet()
 #     csv_reader = csv.reader(open(csv_file,'rt'),delimiter="\t")
@@ -27,11 +33,20 @@ logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%I:%M:%S')
 
 # open excel sheet
 logging.warning ("loading excel sheet")
-wb = xl.load_workbook("dpd-full.xlsx")
+wb = xl.load_workbook("Pāli English Dictionary-full.xlsx")
 sheet = wb["Sheet1"]
 pali_last_row = sheet.max_row + 1
 
+#convert excel to json
+logging.warning ("coverting excel sheet to json")
+excel2json.convert_from_file('json_test.xls')
+
+
+#open txt file
+logging.warning ("opening txt file")
 txt_file = open ("test_results.txt", 'w', encoding= "'utf-8")
+
+
 
 def search_for(
 	test_name,
