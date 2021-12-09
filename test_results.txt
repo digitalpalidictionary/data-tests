@@ -1,0 +1,210 @@
+DPD tests 2021/12/09 09:34:26
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Notez in Anki
+Notez in Google Sheets
+Notez on page
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+29. abstr ā fem (2 of 95)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bhāsā	fem	language; articulate speech
+bhikkhā 1	fem	alms-food; begged food
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+30. abstr anā aṇā (2 of 5)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+saṃvaṇṇanā 1	fem	commentary; explanation
+ṭhapanā	fem	setting up
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+31. abstr bhava (2 of 8)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nevasaññīnāsaññībhava	masc	neither percipient nor non-percipient state; being neither conscious nor unconscious; neither aware nor unaware state of being
+nidānasambhava	masc	primary cause (of); source of existence (of)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+32. abstr bhāva (2 of 7)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+karīsabhāva	masc	state of being excrement
+kheḷasemhādibhāva	masc	(after becoming) saliva, mucous, etc.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+33. abstr tā tta tha (2 of 153)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bhikkhācariyavatta	nt	practice of walking for alms
+buddhasutā	fem	daughter of the Buddha; nun
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+34. abstr ti (2 of 48)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+assuti	fem	without learning
+bhati	fem	wage; fee; money
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+35. act ana aṇa anā aṇā (2 of 158)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+añāṇa	nt	without knowledge; without understanding; without insight
+anāsana	nt	unsuitable seat
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+37. adj could be pp (2 of 51)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+amucchita	adj	not greedy (for); not fixated (with); not infatuated (with)
+anabhirata 1	adj	not enjoying; not fond (of); not taking pleasure (in); not indulging (in)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+40. adj is pp (2 of 54)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+anidāna	adj	baseless; groundless; without foundation; without reason
+anupādāna 1	adj	unattached; with no attachment; not clinging; without grasping; not taking possession (of)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+42. adv comp no from (2 of 36)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+apatanatthaṃ	ind	for the purpose of not falling
+atirekataraṃ	ind	very much; too much; to a high degree; excessively
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+44. case, no (of, in, by, etc) (2 of 196)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+aniccadassāvī	+gen	who seldom sees; who rarely gets to see
+anikkhanta	+abl	not departed; not left; not gone out
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+45. case, no line 2 (2 of 9)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+musā 3	false; untrue; untruthful	√mus + ā
+najjā	of river; river’s	√nad + iyā > najjā
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+46. caus 0 *e *aya no caus base, or wrong sign (2 of 70)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+āsadi	aor	offended; insulted
+āsajja 1	ger	assaulting; attacking
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+55. compound construction is empty (2 of 15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+paccūsa	masc	before dawn; early morning
+padakkhiṇa	adj	auspicious; favourable; reverential; respectful; upright
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+56. comp but contains root (2 of 110)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+abhidhamma 1	masc	details of the Dhamma; finer points of the teaching; (comm) Dhamma and Abhidhamma
+abhidhamma 2	masc	"the ""higher"" doctrine; third basket of the Tipiṭaka"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+58. family2 is empty (2 of 2388)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+abhītanāda	masc	bold roar; fearless yell
+abhūtabbhakkhāna	nt	false slander; misrepresentation with lies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+60. flora link (2 of 14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+eraka	masc	typha grass; cattail
+godhūma	masc	wheat; Triticum sativum; Triticum dicocum
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+63. fut base (2 of 5)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+essati	fut	will go (to); will come (to); will reach
+jessati	fut	will conquer; will defeat; will beat
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+68. ind comp construction, no line 2 (2 of 28)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+divārattiṃ	by day and night	divā + rattiṃ
+ekanta 2	only; merely; just	eka + anta
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+71. lit meaning no case (2 of 29)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+aparisuddhatā	fem	impure state (of); fact of being unclean; dirtiness (of)
+avatiṇṇa	pp	afflicted (with); suffering (with)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+74. masc ī could be adj (2 of 137)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+anatthavādī	masc	who speaks what is unbeneficial
+antevāsī	masc	apprentice; assistant; understudy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+76. masc pl, 2 lines (2 of 46)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bahū	masc	many people; many things; much; a lot
+brāhmaṇagahapatikā	masc	Brahmans and householders
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+79. na > a (2 of 8)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+amakasa	adj	mosquito-free; without gnats
+apaṭicchannakammanta	adj	with unconcealed deeds; who is not furtive in action; who is not underhanded in business; (comm) not bad deed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+82. name of, no cat (2 of 22)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kolanagara	nt	name of a town of the Koliyans
+konāmo	sandhi	what is the (venerable) called? what is the name of?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+84. neg with no antonym (2 of 56)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+akhaṇḍenta	prp	not breaking; not interrupting; not transgressing
+akūjana	adj	not creaking; not rattling; not rumbling; silent; smooth
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+86. no na in gram (2 of 18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+anantaratta	nt	fact of immediately following; immediacy; instantaneousness
+anikkasāva	adj	impure; corrupt; filthy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+88. no suffix (2 of 24)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+āpayamāna	prp	causing to reach; making be
+appamajjanta	prp	not being careless; not being negligent; not wasting one’s time
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+90. nt ya abstr (2 of 17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gelañña	nt	sickness; ill health
+gomaya	nt	cow-dung; cow-pat
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+94. pass not in grammar or verb (2 of 4)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+avirajjhanta	prp	not missing
+muccana	nt	becoming free; being released
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+98. ph construction no > (2 of 235)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+aṇḍaka 1	adj	(of speech) harsh; angry; fierce; wrathful
+aṅgula 1	masc	measure of length; inch; finger breadth
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+100. pp wrong kita (1 of 1)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vaḷañjita	pp	learned; memorized
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+101. ptp no kicca (1 of 1)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+voharitabba	ptp	(gram) should be used; should be employed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+102. ptp not in grammar (2 of 5)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nissāraṇīya	adj	related to escape; regarding a way out
+padhāniya	adj	making effort; striving; applying oneself
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+110. sa = sva? or delete comp in grammar (2 of 12)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sahattha	masc	one’s own hand
+sākkharappabheda	adj	with phonology and etymology; with articulation and explanation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+117. sanskrit empty (2 of 74)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+chabyāputta	masc	name of a royal family of serpents
+cirapaṭikā	ind	for a long time; long since
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+118. sanskrit prp (2 of 228)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+abhitosayanta	prp	thoroughly pleasing; completely satisfying; giving total satisfaction
+abhivaḍḍhamāna	prp	ever increasing (in); ever growing (in)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+120. suffix *, no > (2 of 12)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nārāyana	masc	(comm) ray; beam of light
+ottappī	adj	afraid of wrong; conscientious
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+121. taddhita from root, no line2 (2 of 12)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+khaṇḍikā	fem	piece (of)
+lasikā	fem	synovial fluid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+122. taddhita no from (2 of 4)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+potthaka 1	masc	modelled figurine; clay figure
+sattati	card	seventy (70)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+127. vb × (1 of 1)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tejati	pr	sharpens
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+128. village town city, no cat (2 of 98)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bhojaputta	masc	resident of the Bhoja country
+brāhmaṇagāma	masc	Brahman village
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+['Pāli1', 'Pāli2', 'Fin', 'POS', 'Grammar', 'Derived from', 'Neg', 'Verb', 'Trans', 'Case', 'Meaning IN CONTEXT', 'Literal Meaning', 'Non IA', 'Sanskrit', 'Sk Root', 'Sk Root Mn', 'Cl', 'Pāli Root', 'Root In Comps', 'V', 'Grp', 'Sgn', 'Root Meaning', 'Base', 'Family', 'Family2', 'Construction', 'Derivative', 'Suffix', 'Phonetic Changes', 'Compound', 'Compound Construction', 'Non-Root In Comps', 'Source1', 'Sutta1', 'Example1', 'Source 2', 'Sutta2', 'Example 2', 'Antonyms', 'Synonyms – different word', 'Variant – same constr or diff reading', 'Commentary', 'Notes', 'Cognate', 'Category', 'Link', 'Stem', 'Pattern', 'Buddhadatta', 'Date', 'Pāli1 ≠ const', 'test dupl', 'Metadata', 'Data', 'Letter', 'POS = Grammar']
