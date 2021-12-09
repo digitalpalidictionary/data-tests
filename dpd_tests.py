@@ -32,7 +32,7 @@ pali_df.fillna("", inplace=True)
 
 #import tests
 logging.warning(f"opening tests.ods as data frame")
-tests_csv_file = "/home/bhikkhu/Bodhirasa/Dropbox/dpd/dpd_data_tests/tests.csv"
+tests_csv_file = "/home/bhikkhu/Bodhirasa/Dropbox/dpd/dpd data tests/tests.csv"
 sheet_index = 1
 tests_df = pd.read_csv (tests_csv_file, sep="\t", dtype=str, skip_blank_lines=False)
 tests_df.fillna("", inplace=True)
