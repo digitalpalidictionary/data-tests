@@ -23,12 +23,10 @@ from ods_to_csv import convert_dpd_ods_to_csv
 yn = (input(f"convert ods to csv? "))
 if yn == "y":
 	convert_dpd_ods_to_csv()
-if yn == "n":
-	pass
 
 #import dpd csv
 logging.warning(f"opening dpd.csv as data frame")
-csv_file = "/home/bhikkhu/Bodhirasa/Dropbox/dpd/dpd.csv"
+csv_file = "/home/bhikkhu/Bodhirasa/Dropbox/dpd/csvs/dpd.csv"
 pali_df = pd.read_csv (csv_file, sep="\t", dtype=str, skip_blank_lines=False)
 pali_df.fillna("", inplace=True)
 
