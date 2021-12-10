@@ -27,7 +27,6 @@ modificationTime = time.ctime ( test_results_stats [stat.ST_MTIME ] )
 
 print("dpd.csv last modified on", modificationTime )
 
-
 #convert ods to csv
 from ods_to_csv import convert_dpd_ods_to_csv
 yn = (input(f"convert ods to csv? "))
@@ -65,6 +64,9 @@ with open("test_results.txt", 'a') as txt_file:
 	txt_file.write (f"Notez in Anki\n")
 	txt_file.write (f"Notez in Google Sheets\n")
 	txt_file.write (f"Notez on page\n")
+
+row = 0
+line = row + 2
 
 for row in range (0, test_column_count):
 	search_name = (tests_df.iloc[row, 0])
@@ -131,6 +133,8 @@ for row in range (0, test_column_count):
 		test1 = pali_df["Pāli1"].str.contains(".+")
 	else:
 		print(f"search1 error")
+
+	
 
 	#search2
 	if search_sign2 == "equals":
@@ -251,12 +255,12 @@ for row in range (0, test_column_count):
 	column_count1 = filtered_df.shape[0]
 
 	#print to text file
-	logging.warning (f"{row}. {search_name}")
+	logging.warning (f"{line}. {search_name}")
 
-	if column_count1> -1:
+	if column_count1> 0:
 		with open("test_results.txt", 'a') as txt_file:
 			txt_file.write (f"{line_break}\n")
-			txt_file.write (f"{row + 2}. {search_name} ({column_count1} of {column_count2})\n")
+			txt_file.write (f"{line}. {search_name} ({column_count1} of {column_count2})\n")
 			txt_file.write (f"{line_break}\n")
 			filtered_df.to_csv(txt_file, header=False, index=False, sep="\t")
 			# txt_file.write (f"\n")
@@ -268,4 +272,3 @@ with open("test_results.txt", 'a') as txt_file:
 	txt_file.write (f"{headings}")
 
 # report errors on wrong fields
-# make a dataframe of the list names and count as you go along 
