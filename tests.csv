@@ -25,7 +25,6 @@ decl root	Meaning IN CONTEXT	is not empty	-	POS	equals	root	Pattern	does not con
 decl suffix	Meaning IN CONTEXT	is not empty	-	POS	equals	suffix	Stem	does not contain	\-	Pattern	does not contain word	masc							Pāli1	POS	Meaning IN CONTEXT		100
 decl ve	Meaning IN CONTEXT	is not empty	-	POS	equals	ve	Pattern	does not contain word	(ve|masc)										Pāli1	POS	Meaning IN CONTEXT	īvibhatti	100
 decl missing	Meaning IN CONTEXT	is not empty	-	Stem	is empty	-	Grammar	does not contain word	(letter|cs)										Pāli1	POS	Meaning IN CONTEXT		100
-																							
 abhi > abhy > abbh	Meaning IN CONTEXT	is not empty	-	Pāli1	contains	abbh	Construction	contains word	abhi	Construction	does not contain word	abhy							Pāli1	POS	Meaning IN CONTEXT		2
 abs ending in ya, = ger	Meaning IN CONTEXT	is not empty	-	POS	equals	abstr	Construction	contains	(ya|iya)$										Pāli1	POS	Meaning IN CONTEXT		2
 abstr ā fem	Meaning IN CONTEXT	is not empty	-	POS	equals	fem	Suffix	contains	^ā$	Grammar	does not contain word	abstr							Pāli1	POS	Meaning IN CONTEXT	akkharā|ajā|ativisā|sutā|bhagandalā|bhariyā	2

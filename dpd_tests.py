@@ -7,6 +7,9 @@ import pandas as pd
 from pandas_ods_reader import read_ods
 from datetime import datetime
 import warnings
+import os
+import time
+import stat
 
 warnings.filterwarnings("ignore", 'This pattern has match groups')
 
@@ -14,9 +17,16 @@ warnings.filterwarnings("ignore", 'This pattern has match groups')
 now = datetime.now()
 now = now.strftime("%Y/%m/%d %H:%M:%S")
 
-
 #setup logger
 logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%I:%M:%S')
+
+# get date and time of dpd.csv
+test_results_file = "/home/bhikkhu/Bodhirasa/Dropbox/dpd/csvs/dpd.csv"
+test_results_stats = os.stat ( test_results_file )
+modificationTime = time.ctime ( test_results_stats [stat.ST_MTIME ] )
+
+print("dpd.csv last modified on", modificationTime )
+
 
 #convert ods to csv
 from ods_to_csv import convert_dpd_ods_to_csv
@@ -243,10 +253,10 @@ for row in range (0, test_column_count):
 	#print to text file
 	logging.warning (f"{row}. {search_name}")
 
-	if column_count1> 0:
+	if column_count1> -1:
 		with open("test_results.txt", 'a') as txt_file:
 			txt_file.write (f"{line_break}\n")
-			txt_file.write (f"{row}. {search_name} ({column_count1} of {column_count2})\n")
+			txt_file.write (f"{row + 2}. {search_name} ({column_count1} of {column_count2})\n")
 			txt_file.write (f"{line_break}\n")
 			filtered_df.to_csv(txt_file, header=False, index=False, sep="\t")
 			# txt_file.write (f"\n")
