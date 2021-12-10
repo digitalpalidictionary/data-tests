@@ -120,6 +120,7 @@ sandhi no constr	Meaning IN CONTEXT	is not empty	-	POS	equals	sandhi	Constructio
 sandhi not trans	Meaning IN CONTEXT	is not empty	-	POS	equals	sandhi	Trans	is not empty	-										Pāli1	POS	Meaning IN CONTEXT		2
 sanskrit empty	Meaning IN CONTEXT	is not empty	-	Sanskrit	contains	(\?|\*|^$)	POS	does not equal	idiom	Source1	is not empty	-							Pāli1	POS	Meaning IN CONTEXT	aḍḍa|aḍḍakaraṇa|ādiya 1|āla|ādiya 2|āra 1|āsāṭikā 1|āsāṭikā 2|asikoṭṭha|atidhonacārī|bhesakaḷāvana|candanaṅgalika|chabyāputta|cirapaṭikā	2
 sanskrit prp	Meaning IN CONTEXT	is not empty	-	Sanskrit	does not contain	(āna|māna|māṇa|at)\b	POS	equals	prp										Pāli1	POS	Meaning IN CONTEXT	adhisthāt|	2
+stem ends in double vowel	Stem	contains	(a|ā|i|ī|u|ū|e|o)\b	Pattern	contains	^(a|ā|i|ī|u|ū|e|o)													Pāli1	POS	Meaning IN CONTEXT		10
 su comes from verb	Meaning IN CONTEXT	is not empty	-	Construction	contains word	su	Pāli1	contains	^su	Grammar	contains word	pp							Pāli1	POS	Meaning IN CONTEXT	suta 1|suta 2|suta 3|suta 4	2
 suffix *, no >	Meaning IN CONTEXT	is not empty	-	Construction	contains	\*	Construction	does not contain	\>										Pāli1	POS	Meaning IN CONTEXT	cattālīsā|cattāḷīsā|cattārīsā	2
 taddhita from root, no line2	Meaning IN CONTEXT	is not empty	-	Derivative	equals	taddhita	Construction	does not contain	\n	Pāli Root	is not empty	-							Pāli1	POS	Meaning IN CONTEXT		2
