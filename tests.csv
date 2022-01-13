@@ -65,7 +65,7 @@ family1 is empty	Meaning IN CONTEXT	is not empty	-	Pāli Root	is not empty		Fami
 family2 is empty	Meaning IN CONTEXT	is not empty	-	Construction	contains	\+	Family2	is empty	-	Pāli Root	is empty	-							Pāli1	POS	Meaning IN CONTEXT		10
 family 2 contains +	Meaning IN CONTEXT	is not empty	-	Family2	contains	\+													Pāli1	POS	Meaning IN CONTEXT		2
 flora link	Meaning IN CONTEXT	is not empty	-	Category	contains	flora	Link	is empty											Pāli1	POS	Meaning IN CONTEXT	kudrūsaka|poṭakī|sāka|sāli|tiṇa 1|tiṇa 2	2
-from contains neg	Meaning IN CONTEXT	is not empty	-	Derived From	equals	neg													Pāli1	POS	Meaning IN CONTEXT		10
+from contains neg	Meaning IN CONTEXT	is not empty	-	Derived from	equals	neg													Pāli1	POS	Meaning IN CONTEXT		10
 from is empty	Meaning IN CONTEXT	is not empty	-	Grammar	contains word	(from|of)	Grammar	does not contain word	comp	Derived from	is empty								Pāli1	POS	Meaning IN CONTEXT	Help	2
 fullstop comma space at end	Meaning IN CONTEXT	is not empty	-	Meaning IN CONTEXT	contains	(\.|,| )$	Meaning IN CONTEXT	does not contain	(etc\.)										Pāli1	POS	Meaning IN CONTEXT		2
 fut base	Meaning IN CONTEXT	is not empty	-	Base	is not empty	-	POS	equals	fut	Base	does not contain	irreg							Pāli1	POS	Meaning IN CONTEXT	bhavissaṃ 1|bhavissati 1|bhavissati 2|bhavissati 3|essati|jessati|sessaṃ	2
@@ -143,3 +143,20 @@ trans not empty	Meaning IN CONTEXT	is not empty	-	POS	contains word	(ptp|pp|adj)
 vb ×	Meaning IN CONTEXT	is not empty	-	POS	contains word	(pr|aor|perf|imper|fut|cond|opt)	V	contains	×	Grammar	does not contain word	deno							Pāli1	POS	Meaning IN CONTEXT		2
 village town city, no cat	Meaning IN CONTEXT	is not empty	-	Meaning IN CONTEXT	contains	(city|capita|village|town|country)	Category	is empty											Pāli1	POS	Meaning IN CONTEXT	gāmantanāyaka|gāmanta|gāmanigamādi 2|gāmanigamādi 1|gāmanigama|ekagāma|gāmaṇḍala 1|gāmamajjhe|gāmamagga|gāmakathā 2|gāmakathā 1|gāmaghātaka|gāmagata|gāmadvāra|gāmadāraka|gāmābhimukha|gahita 3|gāmabandhana|gāma 1|dinnamūla|dinnadhana|dhānī|caturāsītinagarasahassāni|caṇḍālagāmadvāra|caṇḍālagāma|aṭavī|aṭavi|asurapura|devanagara|devapura|dubbhikkha|antarabhogika|antaraghara 1|antepura 2|antogāma|bahigāma|bhogika|bhojaputta|brāhmaṇagāma	2
 weird formats	Grammar	does not contain word	(masc|fem|nt|adj|pron|card|prp|ptp|pp|pr|aor|fut|imp|opt|cond|perf|imperf|indef|inf|ind|prefix|letter|suffix|abs|ger|idiom|abbrev|sandhi|cs|ve|root|ordin)																Pāli1	POS	Meaning IN CONTEXT	Abbreviations|Help	2
+stem ī adj	Pāli2	contains	ī$	POS	equals	adj	Pattern	does not equal	ī adj	Grammar	does not contain word	fem							Pāli1	POS	Meaning IN CONTEXT		2
+stem anta adj	Pāli2	contains	mahanta$	POS	equals	adj	Pattern	does not equal	anta adj										Pāli1	POS	Meaning IN CONTEXT		2
+stem a adj	Pāli2	contains	a$	POS	equals	adj	Pattern	does not equal	a adj										Pāli1	POS	Meaning IN CONTEXT		2
+stem ant adj	Pāli2	contains	ant$	POS	equals	adj	Pattern	does not equal	ant adj										Pāli1	POS	Meaning IN CONTEXT		2
+stem u adj	Pāli2	contains	u$	POS	equals	adj	Pattern	does not equal	u adj										Pāli1	POS	Meaning IN CONTEXT		2
+pattern ati pr	Pāli2	contains	ati$	POS	equals	pr	Pattern	does not equal	ati pr	Grammar	does not contain word	comp vb							Pāli1	POS	Meaning IN CONTEXT	anukubbati|dakkhati 1|hanati 1|hanati 2|kubbati|nānukubbati|nikubbati|pakubbati|vikubbati	2
+pattern eti pr	Pāli2	contains	eti$	POS	equals	pr	Pattern	does not equal	eti pr	Grammar	does not contain word	comp vb							Pāli1	POS	Meaning IN CONTEXT	eti 1|eti 2	2
+pattern ind	Stem	contains	-	Pattern	is not empty	-													Pāli1	POS	Meaning IN CONTEXT		2
+pattern a nt	Pāli2	contains	aṃ$	POS	equals	nt	Pattern	does not equal	a nt	Pattern	does not equal	a nt pl							Pāli1	POS	Meaning IN CONTEXT		2
+pattern i fem	Pāli2	contains	i$	POS	equals	fem	Pattern	does not equal	i fem	Pattern	does not equal	i fem pl							Pāli1	POS	Meaning IN CONTEXT		2
+pattern ā fem	Pāli2	contains	ā$	POS	equals	fem	Pattern	does not equal	ā fem	Pattern	does not equal	ā fem pl							Pāli1	POS	Meaning IN CONTEXT		2
+pattern ī fem	Pāli2	contains	ī$	POS	equals	fem	Pattern	does not equal	ī fem	Pattern	does not equal	ī fem pl							Pāli1	POS	Meaning IN CONTEXT		2
+mano group	Pattern	contains	as masc	Grammar	does not contain	mano group													Pāli1	POS	Meaning IN CONTEXT		2
+pattern ī masc	Pāli2	contains	ī$	POS	equals	masc	Pattern	does not equal	ī masc	Pattern	does not equal	i masc pl							Pāli1	POS	Meaning IN CONTEXT	attanī	2
+pattern u masc	Pāli2	contains	u$	POS	equals	masc	Pattern	does not equal	u masc										Pāli1	POS	Meaning IN CONTEXT		2
+pattern a masc pl	Pattern	contains	a masc pl	Pāli2	does not contain	ā$													Pāli1	POS	Meaning IN CONTEXT		2
+pattern enta prp	Pāli2	contains	enta$	POS	equals	prp	Pattern	does not equal	enta prp										Pāli1	POS	Meaning IN CONTEXT		2
