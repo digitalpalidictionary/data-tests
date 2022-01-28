@@ -66,9 +66,9 @@ decl ptp	Meaning IN CONTEXT	is not empty	-	POS	equals	ptp	Pattern	does not conta
 decl root	Meaning IN CONTEXT	is not empty	-	POS	equals	root	Pattern	does not contain word	(masc|root)										Pāli1	POS	Meaning IN CONTEXT		100
 decl suffix	Meaning IN CONTEXT	is not empty	-	POS	equals	suffix	Stem	does not contain	\-	Pattern	does not contain word	masc							Pāli1	POS	Meaning IN CONTEXT		100
 decl ve	Meaning IN CONTEXT	is not empty	-	POS	equals	ve	Pattern	does not contain word	(ve|masc)										Pāli1	POS	Meaning IN CONTEXT	īvibhatti	100
+family 2 contains +	Meaning IN CONTEXT	is not empty	-	Family2	contains	\+													Pāli1	POS	Meaning IN CONTEXT		2
 family1 is empty	Meaning IN CONTEXT	is not empty	-	Pāli Root	is not empty		Family	is empty											Pāli1	POS	Meaning IN CONTEXT		2
 family2 is empty	Meaning IN CONTEXT	is not empty	-	Construction	contains	\+	Family2	is empty	-	Pāli Root	is empty	-							Pāli1	POS	Meaning IN CONTEXT	apācīnaṃ	10
-family 2 contains +	Meaning IN CONTEXT	is not empty	-	Family2	contains	\+													Pāli1	POS	Meaning IN CONTEXT		2
 flora link	Meaning IN CONTEXT	is not empty	-	Category	contains	flora	Link	is empty											Pāli1	POS	Meaning IN CONTEXT	kudrūsaka|poṭakī|sāka|sāli|tiṇa 1|tiṇa 2|atimuttaka 1	2
 from contains neg	Meaning IN CONTEXT	is not empty	-	Derived from	equals	neg													Pāli1	POS	Meaning IN CONTEXT		10
 from is empty	Meaning IN CONTEXT	is not empty	-	Grammar	contains word	(from|of)	Grammar	does not contain word	comp	Derived from	is empty								Pāli1	POS	Meaning IN CONTEXT	Help	2
@@ -150,6 +150,7 @@ sandhi no constr	Meaning IN CONTEXT	is not empty	-	POS	equals	sandhi	Constructio
 sandhi not trans	Meaning IN CONTEXT	is not empty	-	POS	equals	sandhi	Trans	is not empty	-										Pāli1	POS	Meaning IN CONTEXT		2
 sanskrit empty	Meaning IN CONTEXT	is not empty	-	Sanskrit	contains	(\?|\*|^$)	POS	does not equal	idiom	Source1	is not empty	-							Pāli1	POS	Meaning IN CONTEXT	nāgita|ṇa|murumuru|masāraka|adhikakka|masāṇa|mantāṇiputta|mahāli|lāmaka|kvi|koḷāpa|koccha 1|kimilā|kimila|kesamuttiya|kesamutta|kaṃ 3|ka 2|jaṭa|jāṇussoṇi|icchānaṅgalaka|icchānaṅgala|huraṃ|gaḷagaḷāyati|gaḷagaḷāyanta|erāpatha|dhona 2|dārukapillaka|dāmali|daddulabhakkha|daddula|aḍḍa|aḍḍakaraṇa|ādiya 1|āla|ādiya 2|āra 1|āsāṭikā 1|āsāṭikā 2|asikoṭṭha|atidhonacārī|bhesakaḷāvana|candanaṅgalika|chabyāputta|cirapaṭikā	2
 sanskrit prp	Meaning IN CONTEXT	is not empty	-	Sanskrit	does not contain	(āna|āṇa|māna|māṇa|at|ṣṭhāt)\b	POS	equals	prp	Grammar	does not contain word	(nom|acc|instr|dat|abl|gen|loc|voc)							Pāli1	POS	Meaning IN CONTEXT		2
+stem !	Stem	contains	\!	POS	does not contain	(sandhi|idiom)													Pāli1	POS	Meaning IN CONTEXT		10
 stem ends in double vowel	Stem	contains	(a|ā|i|ī|u|ū|e|o)\b	Pattern	contains	^(a|ā|i|ī|u|ū|e|o)													Pāli1	POS	Meaning IN CONTEXT	nāhosi	10
 su comes from verb	Meaning IN CONTEXT	is not empty	-	Construction	contains word	su	Pāli1	contains	^su	Grammar	contains word	pp							Pāli1	POS	Meaning IN CONTEXT	suta 1|suta 2|suta 3|suta 4	2
 suffix *, no >	Meaning IN CONTEXT	is not empty	-	Construction	contains	\*	Construction	does not contain	\>										Pāli1	POS	Meaning IN CONTEXT	cattālīsā|cattāḷīsā|cattārīsā|seṭṭha 1|seyya|seyyo	2
