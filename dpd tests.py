@@ -24,7 +24,7 @@ def make_new_dpd_csv():
 	test_results_stats = os.stat ( test_results_file )
 	modificationTime = time.ctime ( test_results_stats [stat.ST_MTIME ] )
 
-	yn = (input(f"dpd.csv last modified on {modificationTime}. convert ods to csv?  (y?n) "))
+	yn = (input(f"dpd.csv last modified on {modificationTime}. convert ods to csv?  (y/n) "))
 
 	if yn == "y":
 		convert_dpd_ods_to_csv()
