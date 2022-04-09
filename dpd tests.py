@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.10
 # coding: utf-8
 
 import re
@@ -12,32 +12,15 @@ import os
 import time
 import stat
 import pickle
+from timeis import timeis, yellow, blue, white, green, red, line
 
 warnings.filterwarnings("ignore", 'This pattern has match groups')
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-
 now = datetime.now()
 time_now = now.strftime("%Y/%m/%d %H:%M:%S")
 date = now.strftime("%d")
-
-line_break = "~" * 40
-
-def timeis():
-	global blue
-	global yellow
-	global green
-	global red
-	global white
-
-	blue = "\033[38;5;33m" #blue
-	green = "\033[38;5;34m" #green
-	red= "\033[38;5;160m" #red
-	yellow = "\033[38;5;220m" #yellow
-	white = "\033[38;5;251m" #white
-	now = datetime.now()
-	current_time = now.strftime("%Y-%m-%d %H:%M:%S")
-	return (f"{blue}{current_time}{white}")
+line_break = line
 
 def make_new_dpd_csv():
 	global yn
@@ -50,7 +33,7 @@ def make_new_dpd_csv():
 	dpd_csv_mod_time = time.ctime ( dpd_csv_stats [stat.ST_MTIME ] )
 
 	print(f"{timeis()} {green}dpd.csv last modified on \t\t{blue}{dpd_csv_mod_time}{white}") 
-	yn = (input(f"{timeis()} convert ods to dpd.csv?(y/n)\t"))
+	yn = (input(f"{timeis()} convert ods to dpd.csv?(y/n)\t{blue}"))
 
 	if yn == "y":
 		print(f"{timeis()} {green}reading ods_file")
@@ -498,7 +481,7 @@ def test_suffix_matches_pāli1():
 	txt_file1 = open("test_results.txt", 'a')
 	txt_file2 = open ("test_results_all.txt", 'a')
 
-	exceptions = ["adhipa", "bavh", "labbhā", "munī"]
+	exceptions = ["adhipa", "bavh", "labbhā", "munī", "gatī", "visesi"]
 
 	counter = 0
 	for row in range(dpd_df_length):
@@ -533,7 +516,7 @@ def test_construction_line1_matches_pāli1():
 	txt_file1 = open("test_results.txt", 'a')
 	txt_file2 = open ("test_results_all.txt", 'a')
 
-	exceptions = ["adhipa"]
+	exceptions = ["abhijaññā", "acc", "adhipa", "aññā 2", "aññā 3", "anujaññā", "anupādā", "attanī", "chettu", "devāna", "dubbalī", "gāmaṇḍala 2", "gatī", "jaññā 2", "kayirā", "khaṇitti", "koṭṭhāsa 1", "koṭṭhāsa 2", "koṭṭhāsa 3", "labbhā", "lokasmi", "munī", "nājjhosa", "nānujaññā", "nāsiṃsatī", "nāsīsatī", "natthī", "paralokavajjabhayadassāvine", "paresa", "pariññā 2", "paṭivadeyyu", "phuseyyu", "sabbadhammāna", "saḷ", "sat 1", "sat 2", "upādā", "vijaññā", "visesi"]
 
 	counter = 0
 	for row in range(dpd_df_length):
@@ -542,13 +525,17 @@ def test_construction_line1_matches_pāli1():
 		headword_last = headword_clean[len(headword_clean)-1]
 		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
 		construction = dpd_df.loc[row, "Construction"]
+		grammar = dpd_df.loc[row, "Grammar"]
 		
 		if len(construction) > 0:
 			construction = re.sub ("\n.+", "", construction)
 			construction_last = construction[len(construction)-1]
 			
-			if meaning != "" and construction != "" and headword not in exceptions:
-				if headword_last != construction_last:
+			if meaning != "" and \
+			construction != "" and \
+			not re.findall ("\bcomp\b", grammar) and \
+			headword not in exceptions and \
+			headword_last != construction_last:
 					counter += 1
 					if counter == 1:
 						txt_file1.write (f"{line_break}\nconstruction line1 does not match Pāli1\n{line_break}\n")
@@ -603,11 +590,11 @@ def missing_number():
 	dpd_df['Pāli3'] = dpd_df['Pāli1'].str.replace(" \d{1,2}", "")
 	clean_headwords_list =  dpd_df["Pāli3"].tolist()
 
-	everyx = int(date) % 14
+	everyx = int(date) % -10
 	counter = 0
 
 	if  everyx != 0:
-		print(f"{timeis()} ... will run again in {blue}{everyx}{white} days")
+		print(f"{timeis()} ... will run again in {blue}{-everyx}{white} days")
 	
 	else:
 		for row in range(dpd_df_length):
@@ -615,7 +602,7 @@ def missing_number():
 			headword_clean = re.sub(" \d{1,2}", "", headword)
 			count = clean_headwords_list.count(headword_clean)
 
-			if row % 5000 == 0:
+			if row % 10000 == 0:
 				print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 			
 			if not re.findall("\d", headword) and not re.findall(" ", headword_clean) and count > 1:
@@ -634,11 +621,11 @@ def extra_number():
 	print(f"{timeis()} {green}test if pāli1 contains an extra number")
 	txt_file1 = open("test_results.txt", 'a')
 	txt_file2 = open ("test_results_all.txt", 'a')
-	everyx = int(date) % 15
+	everyx = int(date) % -10
 	counter = 0
 
 	if  everyx != 0: 
-		print(f"{timeis()} ... will run again in {blue}{everyx}{white} days")
+		print(f"{timeis()} ... will run again in {blue}{-everyx}{white} days")
 	
 	else:
 		for row in range(dpd_df_length):
@@ -646,7 +633,7 @@ def extra_number():
 			headword_clean = re.sub(" \d{1,2}", "", headword)
 			count = clean_headwords_list.count(headword_clean)
 
-			if row % 5000 == 0:
+			if row % 10000 == 0:
 				print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 			
 			if re.findall("\d", headword) and count == 1:
@@ -676,15 +663,61 @@ def derived_from_in_headwords():
 		headword = dpd_df.loc[row, "Pāli1"]
 		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
 		derived_from = dpd_df.loc[row, "Derived from"]
+		grammar = dpd_df.loc[row, "Grammar"]
 
-		if meaning != "" and derived_from != "" and not derived_from in clean_headwords_list and derived_from not in root_families_list:
+		if meaning != "" \
+				and derived_from != "" \
+				and not derived_from in clean_headwords_list \
+				and derived_from not in root_families_list \
+				and not re.findall("irreg form of", grammar) \
+				and not re.findall("√", derived_from):
 			counter += 1
 			if counter == 1:
-				txt_file1.write (f"{line_break}\nderived from not in Pāli1\n{line_break}\n")
-				txt_file2.write (f"{line_break}\nderived from not in Pāli1\n{line_break}\n")
+				txt_file1.write (f"{line_break}\nderived from not in Pāli1 - test in CST and BJ\n{line_break}\n")
+				txt_file2.write (f"{line_break}\nderived from not in Pāli1 - test in CST and BJ\n{line_break}\n")
 			if counter <= 10:
 				txt_file1.write (f"{headword} / {derived_from}\n")
 			txt_file2.write (f"{headword} / {derived_from}\n")
+
+	txt_file1.close()
+	txt_file2.close()
+
+def pali_words_in_english_meaning():
+	print(f"{timeis()} {green}test if pāli words in english meanings")
+
+	exceptions_set = {"a", "abhidhamma", "ajātasattu", "ala", "an", "ana", "anuruddha", "anāthapiṇḍika", "apadāna", "arahant", "are", "assapura", "avanti", "aya", "aṅga", "aṅguttara", "aṭṭhakathā", "aṭṭhakavagga"}
+
+	txt_file1 = open("test_results.txt", 'a')
+	txt_file2 = open ("test_results_all.txt", 'a')
+	pali_word_string = ""
+	english_word_string = ""
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		headword_clean = re.sub(" \d*$", "", headword)
+		pali_word_string += headword_clean + " "
+		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
+		meaning = meaning.lower()
+		meaning_clean = re.sub("[^A-Za-zāīūṭḍḷñṅṇṃ1234567890\-'’ ]", "", meaning)
+		english_word_string += meaning_clean + " "
+
+	pali_word_set = set(pali_word_string.split(" "))
+	pali_word_set.remove("")
+
+	english_word_set = set(english_word_string.split(" "))
+	english_word_set.remove("")
+	english_word_set = english_word_set - exceptions_set
+	
+	results = sorted(pali_word_set & english_word_set)
+	results_length = len(results)
+	
+	txt_file1.write (f"{line_break}\npāḷi words in english meanings (10/{results_length})\n{line_break}\n")
+	txt_file2.write (f"{line_break}\npāḷi words in english meanings ({results_length})\n{line_break}\n")
+	counter = 0
+	for item in results:
+		if counter < 10:
+			txt_file1.write (f"{item}\n")
+		txt_file2.write (f"{item}\n")
+		counter+=1
 
 	txt_file1.close()
 	txt_file2.close()
@@ -715,5 +748,6 @@ test_construction_line2_matches_pāli1()
 missing_number()
 extra_number()
 derived_from_in_headwords()
+pali_words_in_english_meaning()
 print_columns()
 open_test_results()
