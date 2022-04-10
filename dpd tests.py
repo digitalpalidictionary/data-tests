@@ -96,31 +96,22 @@ def tests_data_integrity_tests():
 
 		if search_column1 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} search column 1 *{search_column1}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search column 1 *{search_column1}* does not exist")
 		if search_column2 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} search column 2 *{search_column2}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search column 2 *{search_column2}* does not exist")
 		if search_column3 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} search column 3 *{search_column3}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search column 3 *{search_column3}* does not exist")
 		if search_column4 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} search column 4 *{search_column4}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search column 4 *{search_column4}* does not exist")
 		if search_column5 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} search column 5 *{search_column5}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search column 5 *{search_column5}* does not exist")
 		if search_column6 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} search column 6 *{search_column6}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search column 6 *{search_column6}* does not exist")
 		if print_column1 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} print column 1 *{print_column1}* does not exist")
-			# txt_file.write (f"{line}. {search_name} print column 1 *{print_column1}* does not exist")
 		if print_column2 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} print column 2 *{print_column2}* does not exist")
-			# txt_file.write (f"{line}. {search_name} print column 2 *{print_column2}* does not exist")
 		if print_column3 not in dpd_df_column_names:
 			print (f"{timeis()}{red}{line}. {search_name} print column 3 *{print_column3}* does not exist")
-			# txt_file.write (f"{line}. {search_name} print column 3 *{print_column3}* does not exist")
 
 		search_sign1 = (tests_df.iloc[row, 2])
 		search_sign2 = (tests_df.iloc[row, 5])
@@ -131,27 +122,21 @@ def tests_data_integrity_tests():
 
 		if search_sign1 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
 			print (f"{timeis()}{red}{line}. {search_name} search_sign1 *{search_sign1}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search_sign1 *{search_sign1}* does not exist")
 
 		if search_sign2 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
 			print (f"{timeis()}{red}{line}. {search_name} search_sign2 *{search_sign2}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search_sign2 *{search_sign2}* does not exist")
 
 		if search_sign3 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
 			print (f"{timeis()}{red}{line}. {search_name} search_sign3 *{search_sign3}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search_sign3 *{search_sign3}* does not exist")
 
 		if search_sign4 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
 			print (f"{timeis()}{red}{line}. {search_name} search_sign4 *{search_sign4}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search_sign4 *{search_sign4}* does not exist")
 
 		if search_sign5 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
 			print (f"{timeis()}{red}{line}. {search_name} search_sign5 *{search_sign5}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search_sign5 *{search_sign5}* does not exist")
 
 		if search_sign6 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
 			print (f"{timeis()}{red}{line}. {search_name} search_sign6 *{search_sign6}* does not exist")
-			# txt_file.write (f"{line}. {search_name} search_sign6 *{search_sign6}* does not exist")
 
 		line += 1
 
@@ -685,7 +670,7 @@ def derived_from_in_headwords():
 def pali_words_in_english_meaning():
 	print(f"{timeis()} {green}test if pāli words in english meanings")
 
-	exceptions_set = {"a", "abhidhamma", "ajātasattu", "ala", "an", "ana", "anuruddha", "anāthapiṇḍika", "apadāna", "arahant", "are", "assapura", "avanti", "aya", "aṅga", "aṅguttara", "aṭṭhakathā", "aṭṭhakavagga"}
+	exceptions_set = {"a", "abhidhamma", "ajātasattu", "ala", "an", "ana", "anuruddha", "anāthapiṇḍika", "apadāna", "arahant", "are", "assapura", "avanti", "aya", "aṅga", "aṅguttara", "aṭṭhakathā", "aṭṭhakavagga", "bhagga", "bhoja", "bhāradvāja", "bhātaragāma", "bhū", "bimbisāra", "bodhi", "bodhisatta"}
 
 	txt_file1 = open("test_results.txt", 'a')
 	txt_file2 = open ("test_results_all.txt", 'a')
