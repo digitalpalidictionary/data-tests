@@ -13,6 +13,7 @@ import time
 import stat
 import pickle
 from timeis import timeis, yellow, blue, white, green, red, line
+from test_formulas import *
 
 warnings.filterwarnings("ignore", 'This pattern has match groups')
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -364,7 +365,7 @@ def generate_test_results():
 
 
 def test_words_construction_are_headwords():
-	print(f"{timeis()} {green}test if words in constructiona are headwords")
+	print(f"{timeis()} {green}test if words in constructions are headwords")
 	headwords_list = dpd_df["Pāli1"].str.replace(" \d*", "").tolist()
 	exceptions_list = ["ika", "iya", "ena", "*ya"]
 	count = 0
@@ -655,6 +656,7 @@ def derived_from_in_headwords():
 				and not derived_from in clean_headwords_list \
 				and derived_from not in root_families_list \
 				and not re.findall("irreg form of", grammar) \
+				and not re.findall(fr"\bcomp\b", grammar) \
 				and not re.findall("√", derived_from):
 			counter += 1
 			if counter == 1:
@@ -670,7 +672,8 @@ def derived_from_in_headwords():
 def pali_words_in_english_meaning():
 	print(f"{timeis()} {green}test if pāli words in english meanings")
 
-	exceptions_set = {"a", "abhidhamma", "ajātasattu", "ala", "an", "ana", "anuruddha", "anāthapiṇḍika", "apadāna", "arahant", "are", "assapura", "avanti", "aya", "aṅga", "aṅguttara", "aṭṭhakathā", "aṭṭhakavagga", "bhagga", "bhoja", "bhāradvāja", "bhātaragāma", "bhū", "bimbisāra", "bodhi", "bodhisatta"}
+	exceptions_set = {"i"}
+	# exceptions_set = {"a", "abhidhamma", "ajātasattu", "ala", "an", "ana", "anuruddha", "anāthapiṇḍika", "apadāna", "arahant", "are", "assapura", "avanti", "aya", "aṅga", "aṅguttara", "aṭṭhakathā", "aṭṭhakavagga", "bhagga", "bhoja", "bhāradvāja", "bhātaragāma", "bhū", "bimbisāra", "bodhi", "bodhisatta", "brahma"}
 
 	txt_file1 = open("test_results.txt", 'a')
 	txt_file2 = open ("test_results_all.txt", 'a')
@@ -683,26 +686,28 @@ def pali_words_in_english_meaning():
 		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
 		meaning = meaning.lower()
 		meaning_clean = re.sub("[^A-Za-zāīūṭḍḷñṅṇṃ1234567890\-'’ ]", "", meaning)
-		english_word_string += meaning_clean + " "
-
+		english_word_string += meaning_clean + ";"
+		
 	pali_word_set = set(pali_word_string.split(" "))
 	pali_word_set.remove("")
 
-	english_word_set = set(english_word_string.split(" "))
+	english_word_string = re.sub("; ", ";", english_word_string)
+	english_word_set = set(english_word_string.split(";"))
 	english_word_set.remove("")
 	english_word_set = english_word_set - exceptions_set
 	
 	results = sorted(pali_word_set & english_word_set)
 	results_length = len(results)
-	
-	txt_file1.write (f"{line_break}\npāḷi words in english meanings (10/{results_length})\n{line_break}\n")
-	txt_file2.write (f"{line_break}\npāḷi words in english meanings ({results_length})\n{line_break}\n")
-	counter = 0
-	for item in results:
-		if counter < 10:
-			txt_file1.write (f"{item}\n")
-		txt_file2.write (f"{item}\n")
-		counter+=1
+
+	if results_length > 0:
+		txt_file1.write (f"{line_break}\npāḷi words in english meanings ({results_length})\n{line_break}\n")
+		txt_file2.write (f"{line_break}\npāḷi words in english meanings ({results_length})\n{line_break}\n")
+		counter = 0
+		for item in results:
+			if counter < 10:
+				txt_file1.write (f"{item}\n")
+			txt_file2.write (f"{item}\n")
+			counter+=1
 
 	txt_file1.close()
 	txt_file2.close()
@@ -720,6 +725,15 @@ def open_test_results():
 	os.popen('code "test_results_all.txt"')
 	print(f"{timeis()} {line_break}")
 
+def run_test_formulas():
+	if date == 1:
+		print(f"{timeis()} {green}testing formulas")
+		setup_dpd_df()
+		test_formulas()
+	else:
+		print(f"{timeis()} {green}testing formulas will run again on the {blue}1st{green} of the month")
+
+
 
 make_new_dpd_csv()
 setup_dfs()
@@ -734,5 +748,6 @@ missing_number()
 extra_number()
 derived_from_in_headwords()
 pali_words_in_english_meaning()
+run_test_formulas()
 print_columns()
 open_test_results()
