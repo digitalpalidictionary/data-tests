@@ -667,6 +667,7 @@ def derived_from_in_headwords():
 			txt_file2.write (f"{headword} / {derived_from}\n")
 
 	txt_file1.close()
+	txt_file2.write(f"{counter}")
 	txt_file2.close()
 
 def pali_words_in_english_meaning():
@@ -731,7 +732,8 @@ def run_test_formulas():
 		setup_dpd_df()
 		test_formulas()
 	else:
-		print(f"{timeis()} {green}testing formulas will run again on the {blue}1st{green} of the month")
+		print(f"{timeis()} {green}testing formulas")
+		print(f"{timeis()} testing formulas will run again on the {blue}1st{green} of the month")
 
 
 
