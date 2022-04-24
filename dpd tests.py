@@ -149,9 +149,7 @@ def generate_test_results():
 	with open("test_results.txt", 'a') as txt_file:
 		txt_file.write (f"DPD tests {time_now}\n")
 		txt_file.write (f"{line_break}\n")
-		txt_file.write (f"Notez in Anki\n")
-		txt_file.write (f"Notez in Google Sheets\n")
-		txt_file.write (f"Notez in Notebook\n")
+
 
 	# define variables
 	for row in range (0, test_column_count):
@@ -436,10 +434,9 @@ def test_headword_in_inflections():
 		headword_clean = re.sub(" \d*", "", headword)
 		pos = dpd_df.loc[row, "POS"]
 		pattern = dpd_df.loc[row, "Pattern"]
-		metadata = dpd_df.loc[row, "Metadata"]
 		grammar = dpd_df.loc[row, "Grammar"]
 		
-		if not re.findall("irreg form of", grammar) and pos not in ignore_pos and pattern not in ignore_patterns and metadata == "":
+		if not re.findall("irreg form of", grammar) and pos not in ignore_pos and pattern not in ignore_patterns:
 			try:
 				with open(f"../inflection generator/output/inflections in table/{headword}", "rb") as f:
 					inflections = pickle.load(f)
@@ -717,6 +714,12 @@ def print_columns():
 	with open("test_results.txt", 'a') as txt_file:
 		headings = list(dpd_df.columns.values)
 		txt_file.write (f"{line_break}\n{headings}\n")
+		txt_file.write(f"{line_break}\n")
+		txt_file.write(f"Notez in Anki\n")
+		txt_file.write(f"Notez in Google Sheets\n")
+		txt_file.write(f"Notez in Notebook\n")
+		txt_file.write(f"Bodhidhamma notes\n")
+
 
 def open_test_results():
 	print(f"{timeis()} {green}opening results")
