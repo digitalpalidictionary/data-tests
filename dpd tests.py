@@ -62,7 +62,7 @@ def setup_dfs():
 	global test_column_count
 	global line
 
-	dpd_df = pd.read_csv ("../csvs/dpd.csv", sep="\t", dtype=str, skip_blank_lines=False)
+	dpd_df = pd.read_csv ("../csvs/dpd-full.csv", sep="\t", dtype=str, skip_blank_lines=False)
 	dpd_df.fillna("", inplace=True)
 	dpd_df_length = len(dpd_df)
 
