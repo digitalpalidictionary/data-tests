@@ -143,10 +143,10 @@ def tests_data_integrity_tests():
 
 def generate_test_results():
 	print(f"{timeis()} {green}generating test results")
-	txt_file = open ("test_results.txt", 'w', encoding= "'utf-8")
-	txt_file2 = open ("test_results_all.txt", 'w', encoding= "'utf-8")
+	txt_file = open ("output/test_results.txt", 'w', encoding= "'utf-8")
+	txt_file2 = open ("output/test_results_all.txt", 'w', encoding= "'utf-8")
 
-	with open("test_results.txt", 'a') as txt_file:
+	with open("output/test_results.txt", 'a') as txt_file:
 		txt_file.write (f"DPD tests {time_now}\n")
 		txt_file.write (f"{line_break}\n")
 
@@ -343,14 +343,14 @@ def generate_test_results():
 		# print to text file
 
 		if column_count1 > 0:
-			with open("test_results.txt", 'a') as txt_file:
+			with open("output/test_results.txt", 'a') as txt_file:
 				txt_file.write (f"{line_break}\n")
 				txt_file.write (f"{line}. {search_name} ({column_count1} of {column_count2})\n")
 				txt_file.write (f"{line_break}\n")
 				filtered_df.to_csv(txt_file, header=False, index=False, sep="\t")
 
 		if column_count1 > 0:
-			with open("test_results_all.txt", 'a') as txt_file2:
+			with open("output/test_results_all.txt", 'a') as txt_file2:
 				txt_file2.write (f"{line_break}\n")
 				txt_file2.write (f"{line}. {search_name} ({column_count3})\n")
 				txt_file2.write (f"{line_break}\n")
@@ -392,7 +392,7 @@ def test_words_construction_are_headwords():
 						text_string += f"{headword}. {item} not in heawords\n"
 					count += 1
 
-	with open("test_results.txt", 'a') as txt_file:
+	with open("output/test_results.txt", 'a') as txt_file:
 		txt_file.write (f"{line_break}\n")
 		txt_file.write (f"construction not in headword (10/{count})\n")
 		txt_file.write (f"{line_break}\n")
@@ -402,8 +402,8 @@ def test_words_construction_are_headwords():
 
 def test_headword_in_inflections():
 	print(f"{timeis()} {green}test if headword in inflection table")
-	txt_file1 = open("test_results.txt", 'a')
-	txt_file2 = open ("test_results_all.txt", 'a')
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open ("output/test_results_all.txt", 'a')
 	
 	ignore_pos = ["idiom", "abs", "ger", "ind", "sandhi", "inf", "prefix", "prp", "abbrev", "cs", "letter", "suffix", "prefix"]
 	ignore_patterns = [
@@ -427,6 +427,8 @@ def test_headword_in_inflections():
 		]
 
 	# fixme test these ignore patterns with re.sub
+	with open("../inflection generator/output/all inflections dict", "rb") as f:
+		all_inflections_dict = pickle.load(f)
 	
 	counter = 0
 	for row in range(dpd_df_length):
@@ -436,24 +438,17 @@ def test_headword_in_inflections():
 		pattern = dpd_df.loc[row, "Pattern"]
 		grammar = dpd_df.loc[row, "Grammar"]
 		
-		if not re.findall("irreg form of", grammar) and pos not in ignore_pos and pattern not in ignore_patterns:
-			try:
-				with open(f"../inflection generator/output/inflections in table/{headword}", "rb") as f:
-					inflections = pickle.load(f)
-					match = False
-					for word in inflections:
-						if word == headword_clean:
-							match = True
-					if match == False:
-						counter += 1
-						if counter == 1:
-							txt_file1.write (f"{line_break}\nheadword not in inflection table\n{line_break}\n")
-							txt_file2.write (f"{line_break}\nheadword not in inflection table\n{line_break}\n")
-						if counter <= 10:
-							txt_file1.write (f"{headword}\n")
-						txt_file2.write (f"{headword}\n")
-			except:
-				print(f"{timeis()} {red}{headword} not found")
+		if not re.findall("irreg form of", grammar) and \
+		pos not in ignore_pos and \
+		pattern not in ignore_patterns:
+			if headword_clean not in all_inflections_dict[headword]["inflections"]:
+				if counter == 1:
+					txt_file1.write(f"{line_break}\nheadword not in inflection table\n{line_break}\n")
+					txt_file2.write(f"{line_break}\nheadword not in inflection table\n{line_break}\n")
+				if counter <= 10:
+					txt_file1.write (f"{headword}\n")
+				txt_file2.write (f"{headword}\n")
+				counter += 1
 
 	txt_file1.close()
 	txt_file2.close()
@@ -461,8 +456,8 @@ def test_headword_in_inflections():
 
 def test_suffix_matches_pāli1():
 	print(f"{timeis()} {green}test if suffix matches pāli1")
-	txt_file1 = open("test_results.txt", 'a')
-	txt_file2 = open ("test_results_all.txt", 'a')
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open ("output/test_results_all.txt", 'a')
 
 	exceptions = ["adhipa", "bavh", "labbhā", "munī", "gatī", "visesi"]
 
@@ -496,8 +491,8 @@ def test_suffix_matches_pāli1():
 
 def test_construction_line1_matches_pāli1():
 	print(f"{timeis()} {green}test if construction line1 matches pāli1")
-	txt_file1 = open("test_results.txt", 'a')
-	txt_file2 = open ("test_results_all.txt", 'a')
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open ("output/test_results_all.txt", 'a')
 
 	exceptions = ["abhijaññā", "acc", "adhipa", "aññā 2", "aññā 3", "anujaññā", "anupādā", "attanī", "chettu", "devāna", "dubbalī", "gāmaṇḍala 2", "gatī", "jaññā 2", "kayirā", "khaṇitti", "koṭṭhāsa 1", "koṭṭhāsa 2", "koṭṭhāsa 3", "labbhā", "lokasmi", "munī", "nājjhosa", "nānujaññā", "nāsiṃsatī", "nāsīsatī", "natthī", "paralokavajjabhayadassāvine", "paresa", "pariññā 2", "paṭivadeyyu", "phuseyyu", "sabbadhammāna", "saḷ", "sat 1", "sat 2", "upādā", "vijaññā", "visesi"]
 
@@ -532,8 +527,8 @@ def test_construction_line1_matches_pāli1():
 
 def test_construction_line2_matches_pāli1():
 	print(f"{timeis()} {green}test if construction line2 matches pāli1")
-	txt_file1 = open("test_results.txt", 'a')
-	txt_file2 = open ("test_results_all.txt", 'a')
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open ("output/test_results_all.txt", 'a')
 
 	exceptions = []
 	
@@ -567,8 +562,8 @@ def missing_number():
 	print(f"{timeis()} {green}test if pāli1 is missing a number")
 	global clean_headwords_list
 
-	txt_file1 = open("test_results.txt", 'a')
-	txt_file2 = open ("test_results_all.txt", 'a')
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open ("output/test_results_all.txt", 'a')
 	
 	dpd_df['Pāli3'] = dpd_df['Pāli1'].str.replace(" \d{1,2}", "")
 	clean_headwords_list =  dpd_df["Pāli3"].tolist()
@@ -602,8 +597,8 @@ def missing_number():
 
 def extra_number():
 	print(f"{timeis()} {green}test if pāli1 contains an extra number")
-	txt_file1 = open("test_results.txt", 'a')
-	txt_file2 = open ("test_results_all.txt", 'a')
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open ("output/test_results_all.txt", 'a')
 	everyx = int(date) % -10
 	counter = 0
 
@@ -633,8 +628,8 @@ def extra_number():
 
 def derived_from_in_headwords():
 	print(f"{timeis()} {green}test if derived from is in pāli1")
-	txt_file1 = open("test_results.txt", 'a')
-	txt_file2 = open ("test_results_all.txt", 'a')
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open ("output/test_results_all.txt", 'a')
 	
 	global root_families_list
 	root_families_list = list(set(dpd_df["Family"].tolist()))
@@ -673,8 +668,8 @@ def pali_words_in_english_meaning():
 	exceptions_set = {"i"}
 	# exceptions_set = {"a", "abhidhamma", "ajātasattu", "ala", "an", "ana", "anuruddha", "anāthapiṇḍika", "apadāna", "arahant", "are", "assapura", "avanti", "aya", "aṅga", "aṅguttara", "aṭṭhakathā", "aṭṭhakavagga", "bhagga", "bhoja", "bhāradvāja", "bhātaragāma", "bhū", "bimbisāra", "bodhi", "bodhisatta", "brahma"}
 
-	txt_file1 = open("test_results.txt", 'a')
-	txt_file2 = open ("test_results_all.txt", 'a')
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open ("output/test_results_all.txt", 'a')
 	pali_word_string = ""
 	english_word_string = ""
 	for row in range(dpd_df_length):
@@ -710,8 +705,47 @@ def pali_words_in_english_meaning():
 	txt_file1.close()
 	txt_file2.close()
 
+def test_derived_from_in_family2():
+
+	print(f"{timeis()} {green}test derived from in family 2")
+	
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+
+	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", ]
+	
+	counter = 0
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
+		derived_from = dpd_df.loc[row, "Derived from"]
+		root = dpd_df.loc[row, "Pāli Root"]
+		grammar = dpd_df.loc[row, "Grammar"]
+		family2 = dpd_df.loc[row, "Family2"]
+		family2_list = family2.split(" ")
+
+		if root == "" and \
+		meaning != "" and \
+		derived_from != "" and \
+        not re.findall(r"\bcomp\b", grammar) and \
+		family2 == "":
+			if counter == 0:
+				txt_file1.write(
+					f"\n{line_break}\nderived from not in family2\n{line_break}\n")
+				txt_file2.write(
+					f"\n{line_break}\nderived from not in family2\n{line_break}\n")
+			if counter <= 10:
+				txt_file1.write(f"{headword} / {derived_from}\n")
+			txt_file2.write(f"{headword} / {derived_from}\n")
+			counter += 1
+
+	txt_file2.write(f"[{counter}]\n")
+	txt_file1.close()
+	txt_file2.close()
+
+
 def print_columns():
-	with open("test_results.txt", 'a') as txt_file:
+	with open("output/test_results.txt", 'a') as txt_file:
 		headings = list(dpd_df.columns.values)
 		txt_file.write (f"{line_break}\n{headings}\n")
 		txt_file.write(f"{line_break}\n")
@@ -724,9 +758,9 @@ def print_columns():
 def open_test_results():
 	print(f"{timeis()} {green}opening results")
 	import os
-	os.popen('code "test_results.txt"')
+	os.popen('code "output/test_results.txt"')
 	import os
-	os.popen('code "test_results_all.txt"')
+	os.popen('code "output/test_results_all.txt"')
 	print(f"{timeis()} {line_break}")
 
 def run_test_formulas():
@@ -754,5 +788,6 @@ extra_number()
 derived_from_in_headwords()
 pali_words_in_english_meaning()
 run_test_formulas()
+test_derived_from_in_family2()
 print_columns()
 open_test_results()
