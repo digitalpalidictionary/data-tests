@@ -12,28 +12,38 @@ import os
 import time
 import stat
 import pickle
-from timeis import timeis, yellow, blue, white, green, red, line
-from test_formulas import *
+from timeis import timeis, yellow, blue, white, green, red, line, tic, toc
+from test_formulas import setup_dpd_df, test_formulas
 
 warnings.filterwarnings("ignore", 'This pattern has match groups')
 warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore', category=UserWarning)
 
 now = datetime.now()
 time_now = now.strftime("%Y/%m/%d %H:%M:%S")
 date = now.strftime("%d")
 line_break = line
 
+
+def time_difference(now, then):
+	difference = now - then
+	difference_seconds = difference.total_seconds()
+	days = divmod(difference_seconds, 86400)
+	return days[0]
+
+print(f"{timeis()} {line_break}")
+print(f"{timeis()} {yellow}dpd data integrity tests")
+print(f"{timeis()} {line_break}")
+
+
 def make_new_dpd_csv():
 	global yn
-	print(f"{timeis()} {line_break}")
-	print(f"{timeis()} {yellow}dpd data integrity tests")
-	print(f"{timeis()} {line_break}")
 
 	dpd_csv_file = "../csvs/dpd.csv"
-	dpd_csv_stats = os.stat ( dpd_csv_file )
-	dpd_csv_mod_time = time.ctime ( dpd_csv_stats [stat.ST_MTIME ] )
+	dpd_csv_stats = os.stat(dpd_csv_file)
+	dpd_csv_mod_time = time.ctime(dpd_csv_stats[stat.ST_MTIME])
 
-	print(f"{timeis()} {green}dpd.csv last modified on \t\t{blue}{dpd_csv_mod_time}{white}") 
+	print(f"{timeis()} {green}dpd.csv last modified on \t\t{blue}{dpd_csv_mod_time}{white}")
 	yn = (input(f"{timeis()} convert ods to dpd.csv?(y/n)\t{blue}"))
 
 	if yn == "y":
@@ -41,35 +51,39 @@ def make_new_dpd_csv():
 		ods_file = "../dpd.ods"
 		csv_file = "../csvs/dpd.csv"
 		sheet_index = 1
-		df = read_ods (ods_file, sheet_index, headers = False)
+		# df = pd.read_excel(ods_file, sheet_name="PALI", engine="odf")
+		df = read_ods(ods_file, sheet_index, headers=False)
 
 		print(f"{timeis()} {green}cleaning up dataframe")
-		df = df.drop(index=0) #removing first row
-		new_header = df.iloc[0] #grab the first row for the header
-		df = df[1:] #take the data less the header row
-		df.columns = new_header #set the header row as the df header
-		df.dropna(subset = ["Pāli1", "Date"], inplace = True) #remove messed up rows
+		df = df.drop(index=0)  # removing first row
+		new_header = df.iloc[0]  # grab the first row for the header
+		df = df[1:]  # take the data less the header row
+		df.columns = new_header  # set the header row as the df header
+		df.dropna(subset=["Pāli1", "Stem"], inplace=True)  # remove messed up rows
 
 		print(f"{timeis()} {green}writing data frame to {csv_file}")
-		df.to_csv(csv_file, index = False, sep = "\t", encoding="utf-8")
+		df.to_csv(csv_file, index=False, sep="\t", encoding="utf-8")
 
 
 def setup_dfs():
-	print(f"{timeis()} {green}setting up df's")
+	print(f"{timeis()} {green}setting up dataframes")
 	global dpd_df
 	global dpd_df_length
 	global tests_df
 	global test_column_count
 	global line
 
+	print(f"{timeis()} {green}importing dpd.csv", end = " ")
 	dpd_df = pd.read_csv ("../csvs/dpd.csv", sep="\t", dtype=str, skip_blank_lines=False)
 	dpd_df.fillna("", inplace=True)
 	dpd_df_length = len(dpd_df)
+	print(f"{white}{dpd_df.shape}")
 
+	print(f"{timeis()} {green}importing tests.csv", end=" ")
 	tests_df = pd.read_csv ("tests.csv", sep="\t", dtype=str, skip_blank_lines=False)
 	tests_df.fillna("", inplace=True)
-
 	test_column_count = tests_df.shape[0]
+	print(f"{white}{tests_df.shape}")
 
 def tests_data_integrity_tests():
 	print(f"{timeis()} {green}running data integrity tests")
@@ -96,23 +110,23 @@ def tests_data_integrity_tests():
 		print_column3 = (tests_df.iloc[row, 21])
 
 		if search_column1 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} search column 1 *{search_column1}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search column 1 *{search_column1}* does not exist")
 		if search_column2 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} search column 2 *{search_column2}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search column 2 *{search_column2}* does not exist")
 		if search_column3 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} search column 3 *{search_column3}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search column 3 *{search_column3}* does not exist")
 		if search_column4 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} search column 4 *{search_column4}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search column 4 *{search_column4}* does not exist")
 		if search_column5 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} search column 5 *{search_column5}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search column 5 *{search_column5}* does not exist")
 		if search_column6 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} search column 6 *{search_column6}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search column 6 *{search_column6}* does not exist")
 		if print_column1 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} print column 1 *{print_column1}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} print column 1 *{print_column1}* does not exist")
 		if print_column2 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} print column 2 *{print_column2}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} print column 2 *{print_column2}* does not exist")
 		if print_column3 not in dpd_df_column_names:
-			print (f"{timeis()}{red}{line}. {search_name} print column 3 *{print_column3}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} print column 3 *{print_column3}* does not exist")
 
 		search_sign1 = (tests_df.iloc[row, 2])
 		search_sign2 = (tests_df.iloc[row, 5])
@@ -122,22 +136,22 @@ def tests_data_integrity_tests():
 		search_sign6 = (tests_df.iloc[row, 17])
 
 		if search_sign1 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
-			print (f"{timeis()}{red}{line}. {search_name} search_sign1 *{search_sign1}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search_sign1 *{search_sign1}* does not exist")
 
 		if search_sign2 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
-			print (f"{timeis()}{red}{line}. {search_name} search_sign2 *{search_sign2}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search_sign2 *{search_sign2}* does not exist")
 
 		if search_sign3 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
-			print (f"{timeis()}{red}{line}. {search_name} search_sign3 *{search_sign3}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search_sign3 *{search_sign3}* does not exist")
 
 		if search_sign4 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
-			print (f"{timeis()}{red}{line}. {search_name} search_sign4 *{search_sign4}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search_sign4 *{search_sign4}* does not exist")
 
 		if search_sign5 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
-			print (f"{timeis()}{red}{line}. {search_name} search_sign5 *{search_sign5}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search_sign5 *{search_sign5}* does not exist")
 
 		if search_sign6 not in ["equals", "does not equal", "contains", "does not contain", "contains word", "does not contain word", "is empty", "is not empty", ""]:
-			print (f"{timeis()}{red}{line}. {search_name} search_sign6 *{search_sign6}* does not exist")
+			print (f"{timeis()}{red} {line}. {search_name} search_sign6 *{search_sign6}* does not exist")
 
 		line += 1
 
@@ -441,7 +455,8 @@ def test_headword_in_inflections():
 		if not re.findall("irreg form of", grammar) and \
 		pos not in ignore_pos and \
 		pattern not in ignore_patterns:
-			if headword_clean not in all_inflections_dict[headword]["inflections"]:
+			if headword in all_inflections_dict and \
+			headword_clean not in all_inflections_dict[headword]["inflections"]:
 				if counter == 1:
 					txt_file1.write(f"{line_break}\nheadword not in inflection table\n{line_break}\n")
 					txt_file2.write(f"{line_break}\nheadword not in inflection table\n{line_break}\n")
@@ -568,13 +583,17 @@ def missing_number():
 	dpd_df['Pāli3'] = dpd_df['Pāli1'].str.replace(" \d{1,2}", "")
 	clean_headwords_list =  dpd_df["Pāli3"].tolist()
 
-	everyx = int(date) % -10
-	counter = 0
+	with open("output/missing_number_lastrun", "rb") as p:
+		then = pickle.load(p)
+	days = time_difference(now, then)
 
-	if  everyx != 0:
-		print(f"{timeis()} ... will run again in {blue}{-everyx}{white} days")
+
+	if days < 10:
+		print(f"{timeis()} {green}...will run again in {blue}{10-days:.0f}{green} days")
 	
 	else:
+		print(f"{timeis()} {green}...last ran {blue}{10-days:.0f}{green} days ago")
+		counter=0
 		for row in range(dpd_df_length):
 			headword = dpd_df.loc[row, "Pāli1"]
 			headword_clean = re.sub(" \d{1,2}", "", headword)
@@ -591,6 +610,8 @@ def missing_number():
 				if counter <= 10:
 					txt_file1.write (f"{headword} / {count}\n")
 				txt_file2.write (f"{headword} / {count}\n")
+		with open("output/missing_number_lastrun", "wb") as p:
+			pickle.dump(now, p)
 
 	txt_file1.close()
 	txt_file2.close()
@@ -599,13 +620,17 @@ def extra_number():
 	print(f"{timeis()} {green}test if pāli1 contains an extra number")
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open ("output/test_results_all.txt", 'a')
-	everyx = int(date) % -10
 	counter = 0
 
-	if  everyx != 0: 
-		print(f"{timeis()} ... will run again in {blue}{-everyx}{white} days")
+	with open("output/extra_number_lastrun", "rb") as p:
+		then = pickle.load(p)
+	days = time_difference(now, then)
+	
+	if days < 10:
+		print(f"{timeis()} {green}...will run again in {blue}{10-days:.0f}{green} days")
 	
 	else:
+		print(f"{timeis()} {green}last ran {blue}{days:.0f}{green} days ago")
 		for row in range(dpd_df_length):
 			headword = dpd_df.loc[row, "Pāli1"]
 			headword_clean = re.sub(" \d{1,2}", "", headword)
@@ -622,6 +647,9 @@ def extra_number():
 				if counter <= 10:
 					txt_file1.write (f"{headword} / {count}\n")
 				txt_file2.write (f"{headword} / {count}\n")
+
+		with open("output/extra_number_lastrun", "wb") as p:
+			pickle.dump(now, p)
 
 	txt_file1.close()
 	txt_file2.close()
@@ -712,11 +740,12 @@ def test_derived_from_in_family2():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open("output/test_results_all.txt", 'a')
 
-	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", ]
+	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", "abhiṅkharitvā"]
 	
 	counter = 0
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
+		pos = dpd_df.loc[row, "POS"]
 		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
 		derived_from = dpd_df.loc[row, "Derived from"]
 		root = dpd_df.loc[row, "Pāli Root"]
@@ -724,7 +753,9 @@ def test_derived_from_in_family2():
 		family2 = dpd_df.loc[row, "Family2"]
 		family2_list = family2.split(" ")
 
-		if root == "" and \
+		if headword not in exceptions and \
+		root == "" and \
+		pos != "pron" and \
 		meaning != "" and \
 		derived_from != "" and \
         not re.findall(r"\bcomp\b", grammar) and \
@@ -764,16 +795,100 @@ def open_test_results():
 	print(f"{timeis()} {line_break}")
 
 def run_test_formulas():
-	if date == 1:
-		print(f"{timeis()} {green}testing formulas")
+	print(f"{timeis()} {green}testing formulas")
+
+	with open("output/test_formulas_lastrun", "rb") as p:
+		then = pickle.load(p)
+	days = time_difference(now, then)
+
+	if days > 15:
+		print(f"{timeis()} {green}last ran {blue}{days:.0f}{green} days ago")
 		setup_dpd_df()
 		test_formulas()
+		with open("output/test_formulas_lastrun", "wb") as p:
+			pickle.dump(now, p)
 	else:
-		print(f"{timeis()} {green}testing formulas")
-		print(f"{timeis()} testing formulas will run again on the {blue}1st{green} of the month")
+		print(f"{timeis()} {green}...will run again in {blue}{15-days:.0f} {green}days time")
+
+def pos_does_not_equal_gram():
+	print(f"{timeis()} {green}testing pos equals gram")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	counter = 0
+
+	exceptions_list = ["dve 2"]
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		pos = dpd_df.loc[row, "POS"]
+		grammar = dpd_df.loc[row, "Grammar"]
+		grammar_clean = re.sub("( |,).+$", "", grammar)
+		if (headword not in exceptions_list
+		and pos != grammar_clean):
+			if counter == 0:
+				txt_file1.write(f"\n{line_break}\npos does not equal gram\n{line_break}\n")
+				txt_file2.write(
+					f"\n{line_break}\npos does not equal gram\n{line_break}\n")
+			if counter <= 10:
+				txt_file1.write(f"{headword} {pos} ≠ {grammar}\n")
+			txt_file2.write(f"{headword} {pos} ≠ {grammar}\n")
+			counter += 1
+
+	txt_file2.write(f"[{counter}]\n")
+	txt_file1.close()
+	txt_file2.close()
 
 
+def pos_does_not_equal_pattern():
+	print(f"{timeis()} {green}testing pos equals pattern")
 
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	pos_exceptions = ['abbrev', 'abs', 'cs', 'fut', 'ger', 'idiom', 'imp', 'ind', 'inf', 'letter', 'root', 'opt', 'prefix', 'sandhi', 'suffix', 've', 'var']
+	headword_exceptions = ["paṭṭhitago", "dve 2"]
+
+	counter = 0
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		pos = dpd_df.loc[row, "POS"]
+		pattern = dpd_df.loc[row, "Pattern"]
+		if len(re.findall(" ", pattern)) == 1:
+			pattern_clean=re.sub(".* ", "", pattern)
+		elif len(re.findall(" ", pattern)) == 2:
+			pattern_clean = re.sub(".* (.+) .*", "\\1", pattern)
+		else:
+			pattern_clean = pattern
+
+		if pos not in pos_exceptions:
+			if headword not in headword_exceptions:
+				if pos != pattern_clean:
+					if counter == 0:
+						txt_file1.write(f"\n{line_break}\npos does not equal pattern\n{line_break}\n")
+						txt_file2.write(
+							f"\n{line_break}\npos does not equal pattern\n{line_break}\n")
+					if counter <= 10:
+						txt_file1.write(f"{headword} {pos} ≠ {pattern}\n")
+					txt_file2.write(f"{headword} {pos} ≠ {pattern}\n")
+					counter += 1
+
+	txt_file2.write(f"[{counter}]\n")
+	txt_file1.close()
+	txt_file2.close()
+
+
+def reset_lastrun():
+	then = datetime(2012, 3, 5, 23, 8, 15)
+	with open("output/extra_number_lastrun", "wb") as p:
+		pickle.dump(then, p)
+	with open("output/missing_number_lastrun", "wb") as p:
+		pickle.dump(then, p)
+	with open("output/test_formulas_lastrun", "wb") as p:
+		pickle.dump(then, p)
+
+
+tic()
 make_new_dpd_csv()
 setup_dfs()
 tests_data_integrity_tests()
@@ -789,5 +904,9 @@ derived_from_in_headwords()
 pali_words_in_english_meaning()
 run_test_formulas()
 test_derived_from_in_family2()
+pos_does_not_equal_gram()
+pos_does_not_equal_pattern()
 print_columns()
 open_test_results()
+# reset_lastrun()
+tic()

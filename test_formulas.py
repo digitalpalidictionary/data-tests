@@ -3,9 +3,6 @@ from timeis import *
 import re
 
 def setup_dpd_df():
-	print(f"{timeis()} {yellow}testing root formulas")
-	print(f"{timeis()} {line}")
-	
 	input (f"{timeis()} {white}please save a copy of dpd.ods to csv with formulas {blue} ")
 	print(f"{timeis()} {green}setting up dpd formulas dataframe")
 	global df
