@@ -1,13 +1,24 @@
 import pandas as pd
 from timeis import *
 import re
+import os
+
+def export_ods_with_formulas():
+
+	# help
+	# https://help.libreoffice.org/latest/en-GB/text/shared/guide/csv_params.html?DbPAR=SHARED#bm_id181634740978601
+
+	os.popen('cp "/home/bhikkhu/Bodhirasa/Dropbox/dpd/dpd.ods" "/home/bhikkhu/Bodhirasa/Dropbox/dpd/data tests/dpd.ods"')
+	
+	os.popen('soffice --convert-to csv:"Text - txt - csv (StarCalc)":"9,34,76,,,,,,,true" dpd.ods')
+	
 
 def setup_dpd_df():
-	input (f"{timeis()} {white}please save a copy of dpd.ods to csv with formulas {blue} ")
+	input (f"{timeis()} {white}press enter when csv has saved {blue} ")
 	print(f"{timeis()} {green}setting up dpd formulas dataframe")
 	global df
 
-	df = pd.read_csv("../csvs/dpd-formulas.csv", sep = "\t", dtype = str, header=None)
+	df = pd.read_csv("dpd.csv", sep = "\t", dtype = str, header=None)
 	df.fillna("", inplace=True)
 	# df = df.drop(index=0) #removing first row
 	new_header = df.loc[1] #grab the first row for the header
@@ -53,5 +64,7 @@ def test_formulas():
 			print(f"{timeis()} {red}{row}/{length}\t{headword} error")
 			print(f"{timeis()} {red}{row}/{length}\t{sk_root} {sk_root_mn} {sk_root_cl} {pali_root} {pali_root_incomps} {pali_root_v} {pali_root_grp} {pali_root_mn}")
 
+
+# export_ods_with_formulas()
 # setup_dpd_df()
 # test_formulas()
