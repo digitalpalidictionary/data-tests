@@ -13,7 +13,7 @@ import time
 import stat
 import pickle
 from timeis import timeis, yellow, blue, white, green, red, line, tic, toc
-from test_formulas import setup_dpd_df, test_formulas
+from test_formulas import setup_dpd_df, test_formulas, export_ods_with_formulas
 
 warnings.filterwarnings("ignore", 'This pattern has match groups')
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -166,7 +166,7 @@ def generate_test_results():
 
 
 	# define variables
-	for row in range (0, test_column_count):
+	for row in range(0, test_column_count):  # test_column_count
 		line = row + 2
 		search_name = (tests_df.iloc[row, 0])
 
@@ -346,13 +346,14 @@ def generate_test_results():
 		filter = test_exceptions & test1 & test2 & test3 & test4 & test5 & test6
 
 		filtered_df = dpd_df.loc[filter, [print_column1, print_column2, print_column3]]
+		filtered_df = filtered_df.head(iterations)
 		all_tests_df = dpd_df.loc[filter, [print_column1, print_column2, print_column3]]
 
-		column_count2 = filtered_df.shape[0]
-		filtered_df = filtered_df.head(iterations)
 		column_count1 = filtered_df.shape[0]
-
+		column_count2 = filtered_df.shape[0]
 		column_count3 = all_tests_df.shape[0]
+
+		allwords = all_tests_df['Pāli1'].to_list()
 
 		# print to text file
 
@@ -362,6 +363,13 @@ def generate_test_results():
 				txt_file.write (f"{line}. {search_name} ({column_count1} of {column_count2})\n")
 				txt_file.write (f"{line_break}\n")
 				filtered_df.to_csv(txt_file, header=False, index=False, sep="\t")
+				txt_file.write(f"\n")
+				for word in allwords[:iterations]:
+					if word == allwords[0]:
+						txt_file.write(f"^({word}")
+					else:
+						txt_file.write(f"|{word}")
+				txt_file.write(f")$\n\n")
 
 		if column_count1 > 0:
 			with open("output/test_results_all.txt", 'a') as txt_file2:
@@ -369,6 +377,13 @@ def generate_test_results():
 				txt_file2.write (f"{line}. {search_name} ({column_count3})\n")
 				txt_file2.write (f"{line_break}\n")
 				all_tests_df.to_csv(txt_file2, header=False, index=False, sep="\t")
+				txt_file2.write(f"\n")
+				for word in allwords:
+					if word == allwords[0]:
+						txt_file2.write(f"^({word}")
+					else:
+						txt_file2.write(f"|{word}")
+				txt_file2.write(f")$\n\n")
 
 		line += 1
 
@@ -414,6 +429,25 @@ def test_words_construction_are_headwords():
 		txt_file.write (f"{line_break}\n")
 
 
+def write_all_words(allwords, txt_file1, txt_file2):
+
+	if allwords != []:
+		txt_file1.write(f"\n^(")
+		for word in allwords[:10]:
+			if word == allwords[0]:
+				txt_file1.write(f"{word}")
+			else:
+				txt_file1.write(f"|{word}")
+		txt_file1.write(f")$\n")
+
+		txt_file2.write(f"\n^(")
+		for word in allwords:
+			if word == allwords[0]:
+				txt_file2.write(f"{word}")
+			else:
+				txt_file2.write(f"|{word}")
+		txt_file2.write(f")$\n")
+
 def test_headword_in_inflections():
 	print(f"{timeis()} {green}test if headword in inflection table")
 	txt_file1 = open("output/test_results.txt", 'a')
@@ -439,6 +473,8 @@ def test_headword_in_inflections():
 		"ka pron",
 		"ubha pron"
 		]
+		
+	allwords = []
 
 	# fixme test these ignore patterns with re.sub
 	with open("../inflection generator/output/all inflections dict", "rb") as f:
@@ -457,6 +493,7 @@ def test_headword_in_inflections():
 		pattern not in ignore_patterns:
 			if headword in all_inflections_dict and \
 			headword_clean not in all_inflections_dict[headword]["inflections"]:
+				allwords.append(headword)
 				if counter == 1:
 					txt_file1.write(f"{line_break}\nheadword not in inflection table\n{line_break}\n")
 					txt_file2.write(f"{line_break}\nheadword not in inflection table\n{line_break}\n")
@@ -464,9 +501,12 @@ def test_headword_in_inflections():
 					txt_file1.write (f"{headword}\n")
 				txt_file2.write (f"{headword}\n")
 				counter += 1
+	
+	write_all_words(allwords, txt_file1, txt_file2)
 
 	txt_file1.close()
 	txt_file2.close()
+
 
 
 def test_suffix_matches_pāli1():
@@ -475,6 +515,8 @@ def test_suffix_matches_pāli1():
 	txt_file2 = open ("output/test_results_all.txt", 'a')
 
 	exceptions = ["adhipa", "bavh", "labbhā", "munī", "gatī", "visesi"]
+
+	allwords= []
 
 	counter = 0
 	for row in range(dpd_df_length):
@@ -493,6 +535,7 @@ def test_suffix_matches_pāli1():
 		if suffix != "" and headword not in exceptions:
 			if headword_last != suffix_last_letter:
 				counter += 1
+				allwords.append(headword)
 				if counter == 1:
 					txt_file1.write (f"{line_break}\nsuffix does not match Pāli1\n{line_break}\n")
 					txt_file2.write (f"{line_break}\nsuffix does not match Pāli1\n{line_break}\n")
@@ -500,6 +543,8 @@ def test_suffix_matches_pāli1():
 					txt_file1.write (f"{headword} / {suffix}\n")
 				txt_file2.write (f"{headword} / {suffix}\n")
 
+	write_all_words(allwords, txt_file1, txt_file2)
+	
 	txt_file1.close()
 	txt_file2.close()
 
@@ -512,6 +557,8 @@ def test_construction_line1_matches_pāli1():
 	exceptions = ["abhijaññā", "acc", "adhipa", "aññā 2", "aññā 3", "anujaññā", "anupādā", "attanī", "chettu", "devāna", "dubbalī", "gāmaṇḍala 2", "gatī", "jaññā 2", "kayirā", "khaṇitti", "koṭṭhāsa 1", "koṭṭhāsa 2", "koṭṭhāsa 3", "labbhā", "lokasmi", "munī", "nājjhosa", "nānujaññā", "nāsiṃsatī", "nāsīsatī", "natthī", "paralokavajjabhayadassāvine", "paresa", "pariññā 2", "paṭivadeyyu", "phuseyyu", "sabbadhammāna", "saḷ", "sat 1", "sat 2", "upādā", "vijaññā", "visesi"]
 
 	counter = 0
+	allwords = []
+
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
 		headword_clean = re.sub(" \d*", "", headword)
@@ -529,6 +576,7 @@ def test_construction_line1_matches_pāli1():
 			not re.findall ("\bcomp\b", grammar) and \
 			headword not in exceptions and \
 			headword_last != construction_last:
+					allwords.append(headword)
 					counter += 1
 					if counter == 1:
 						txt_file1.write (f"{line_break}\nconstruction line1 does not match Pāli1\n{line_break}\n")
@@ -536,6 +584,8 @@ def test_construction_line1_matches_pāli1():
 					if counter <= 10:
 						txt_file1.write (f"{headword} / {construction}\n")
 					txt_file2.write (f"{headword} / {construction}\n")
+
+	write_all_words(allwords, txt_file1, txt_file2)
 
 	txt_file1.close()
 	txt_file2.close()
@@ -546,6 +596,7 @@ def test_construction_line2_matches_pāli1():
 	txt_file2 = open ("output/test_results_all.txt", 'a')
 
 	exceptions = []
+	allwords = []
 	
 	counter = 0
 	for row in range(dpd_df_length):
@@ -563,12 +614,15 @@ def test_construction_line2_matches_pāli1():
 				if meaning != "" and construction != "" and headword not in exceptions:
 					if headword_last != construction_last:
 						counter += 1
+						allwords.append(headword)
 						if counter == 1:
 							txt_file1.write (f"{line_break}\nconstruction line2 does not match Pāli1\n{line_break}\n")
 							txt_file2.write (f"{line_break}\nconstruction line2 does not match Pāli1\n{line_break}\n")
 						if counter <= 10:
 							txt_file1.write (f"{headword} / {construction}\n")
 						txt_file2.write (f"{headword} / {construction}\n")
+	
+	write_all_words(allwords, txt_file1, txt_file2)
 
 	txt_file1.close()
 	txt_file2.close()
@@ -583,13 +637,15 @@ def missing_number():
 	dpd_df['Pāli3'] = dpd_df['Pāli1'].str.replace(" \d{1,2}", "")
 	clean_headwords_list =  dpd_df["Pāli3"].tolist()
 
+	allwords = []
+
 	with open("output/missing_number_lastrun", "rb") as p:
 		then = pickle.load(p)
 	days = time_difference(now, then)
 
 
-	if days < 10:
-		print(f"{timeis()} {green}...will run again in {blue}{10-days:.0f}{green} days")
+	if days < 7:
+		print(f"{timeis()} {green}...will run again in {blue}{7-days:.0f}{green} days")
 	
 	else:
 		print(f"{timeis()} {green}...last ran {blue}{10-days:.0f}{green} days ago")
@@ -604,6 +660,7 @@ def missing_number():
 			
 			if not re.findall("\d", headword) and not re.findall(" ", headword_clean) and count > 1:
 				counter += 1
+				allwords.append(headword)
 				if counter == 1:
 					txt_file1.write (f"{line_break}\nPāli1 is missing a number\n{line_break}\n")
 					txt_file2.write (f"{line_break}\nPāli1 is missing a number\n{line_break}\n")
@@ -613,6 +670,7 @@ def missing_number():
 		with open("output/missing_number_lastrun", "wb") as p:
 			pickle.dump(now, p)
 
+	write_all_words(allwords, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
@@ -621,13 +679,14 @@ def extra_number():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open ("output/test_results_all.txt", 'a')
 	counter = 0
+	allwords = []
 
 	with open("output/extra_number_lastrun", "rb") as p:
 		then = pickle.load(p)
 	days = time_difference(now, then)
 	
-	if days < 10:
-		print(f"{timeis()} {green}...will run again in {blue}{10-days:.0f}{green} days")
+	if days < 5:
+		print(f"{timeis()} {green}...will run again in {blue}{5-days:.0f}{green} days")
 	
 	else:
 		print(f"{timeis()} {green}last ran {blue}{days:.0f}{green} days ago")
@@ -641,6 +700,7 @@ def extra_number():
 			
 			if re.findall("\d", headword) and count == 1:
 				counter += 1
+				allwords.append(headword)
 				if counter == 1:
 					txt_file1.write (f"{line_break}\nPāli1 contains an extra number\n{line_break}\n")
 					txt_file2.write (f"{line_break}\nPāli1 contains an extra number\n{line_break}\n")
@@ -650,7 +710,8 @@ def extra_number():
 
 		with open("output/extra_number_lastrun", "wb") as p:
 			pickle.dump(now, p)
-
+	
+	write_all_words(allwords, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
@@ -664,6 +725,7 @@ def derived_from_in_headwords():
 	root_families_list.remove("")
 
 	counter = 0
+	allwords = []
 
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
@@ -679,6 +741,7 @@ def derived_from_in_headwords():
 				and not re.findall(fr"\bcomp\b", grammar) \
 				and not re.findall("√", derived_from):
 			counter += 1
+			allwords.append(headword)
 			if counter == 1:
 				txt_file1.write (f"{line_break}\nderived from not in Pāli1 - test in CST and BJ\n{line_break}\n")
 				txt_file2.write (f"{line_break}\nderived from not in Pāli1 - test in CST and BJ\n{line_break}\n")
@@ -686,13 +749,16 @@ def derived_from_in_headwords():
 				txt_file1.write (f"{headword} / {derived_from}\n")
 			txt_file2.write (f"{headword} / {derived_from}\n")
 
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
 	txt_file1.close()
-	txt_file2.write(f"{counter}")
 	txt_file2.close()
 
 def pali_words_in_english_meaning():
 	print(f"{timeis()} {green}test if pāli words in english meanings")
 
+	allwords = []
 	exceptions_set = {"i"}
 	# exceptions_set = {"a", "abhidhamma", "ajātasattu", "ala", "an", "ana", "anuruddha", "anāthapiṇḍika", "apadāna", "arahant", "are", "assapura", "avanti", "aya", "aṅga", "aṅguttara", "aṭṭhakathā", "aṭṭhakavagga", "bhagga", "bhoja", "bhāradvāja", "bhātaragāma", "bhū", "bimbisāra", "bodhi", "bodhisatta", "brahma"}
 
@@ -724,12 +790,14 @@ def pali_words_in_english_meaning():
 		txt_file1.write (f"{line_break}\npāḷi words in english meanings ({results_length})\n{line_break}\n")
 		txt_file2.write (f"{line_break}\npāḷi words in english meanings ({results_length})\n{line_break}\n")
 		counter = 0
+		allwords.append(headword)
 		for item in results:
 			if counter < 10:
 				txt_file1.write (f"{item}\n")
 			txt_file2.write (f"{item}\n")
 			counter+=1
-
+	
+	write_all_words(allwords, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
@@ -741,6 +809,7 @@ def test_derived_from_in_family2():
 	txt_file2 = open("output/test_results_all.txt", 'a')
 
 	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", "abhiṅkharitvā"]
+	allwords = []
 	
 	counter = 0
 	for row in range(dpd_df_length):
@@ -760,6 +829,7 @@ def test_derived_from_in_family2():
 		derived_from != "" and \
         not re.findall(r"\bcomp\b", grammar) and \
 		family2 == "":
+			allwords.append(headword)
 			if counter == 0:
 				txt_file1.write(
 					f"\n{line_break}\nderived from not in family2\n{line_break}\n")
@@ -769,8 +839,10 @@ def test_derived_from_in_family2():
 				txt_file1.write(f"{headword} / {derived_from}\n")
 			txt_file2.write(f"{headword} / {derived_from}\n")
 			counter += 1
-
-	txt_file2.write(f"[{counter}]\n")
+	
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
@@ -803,6 +875,7 @@ def run_test_formulas():
 
 	if days > 15:
 		print(f"{timeis()} {green}last ran {blue}{days:.0f}{green} days ago")
+		export_ods_with_formulas()
 		setup_dpd_df()
 		test_formulas()
 		with open("output/test_formulas_lastrun", "wb") as p:
@@ -816,6 +889,7 @@ def pos_does_not_equal_gram():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open("output/test_results_all.txt", 'a')
 	counter = 0
+	allwords = []
 
 	exceptions_list = ["dve 2"]
 
@@ -826,6 +900,7 @@ def pos_does_not_equal_gram():
 		grammar_clean = re.sub("( |,).+$", "", grammar)
 		if (headword not in exceptions_list
 		and pos != grammar_clean):
+			allwords.append(headword)
 			if counter == 0:
 				txt_file1.write(f"\n{line_break}\npos does not equal gram\n{line_break}\n")
 				txt_file2.write(
@@ -835,7 +910,9 @@ def pos_does_not_equal_gram():
 			txt_file2.write(f"{headword} {pos} ≠ {grammar}\n")
 			counter += 1
 
-	txt_file2.write(f"[{counter}]\n")
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
@@ -849,6 +926,7 @@ def pos_does_not_equal_pattern():
 	headword_exceptions = ["paṭṭhitago", "dve 2"]
 
 	counter = 0
+	allwords = []
 
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
@@ -864,6 +942,7 @@ def pos_does_not_equal_pattern():
 		if pos not in pos_exceptions:
 			if headword not in headword_exceptions:
 				if pos != pattern_clean:
+					allwords.append(headword)
 					if counter == 0:
 						txt_file1.write(f"\n{line_break}\npos does not equal pattern\n{line_break}\n")
 						txt_file2.write(
@@ -872,8 +951,10 @@ def pos_does_not_equal_pattern():
 						txt_file1.write(f"{headword} {pos} ≠ {pattern}\n")
 					txt_file2.write(f"{headword} {pos} ≠ {pattern}\n")
 					counter += 1
-
-	txt_file2.write(f"[{counter}]\n")
+	
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
