@@ -969,6 +969,279 @@ def reset_lastrun():
 		pickle.dump(then, p)
 
 
+def derivatives_in_compounds():
+	print(f"{timeis()} {green}testing for derivatives in compounds")
+	family2_list = set(dpd_df['Family2'].str.split(" "))
+	
+	test1 = dpd_df['Grammar'].str.contains('\bcomp\b')
+	test2 = dpd_df['Derivative'].empty()
+	test3 = dpd_df['Pāli Root'].empty()
+	test4 = ~dpd_df['Grammar'].str.contains('\bpl\b')
+	test5 = ~dpd_df['Grammar'].str.contains('\b(nom|acc|instr|dat|abl|gen|loc|voc)\b')
+	filter = test1 & test2 & test3 & test4 & test5
+	filtered_df = dpd_df[filter]
+	construction_list = set(filtered_df['Construction'].str.split(" + "))
+
+	not_in_family2_list = []
+	for row in range(len(filtered_df)):
+		family2words = filtered_df.loc['Family2'].str.split(" ")
+		construction_words = filtered_df.loc['Construction'].str.split(" + ")
+		for construction_word in construction_words:
+			if construction_word not in family2words:
+				not_in_family2_list.append(construction_word)
+	
+	print(not_in_family2_list)
+	# for row in range(len(dpd_df)):
+
+def bases_contains_star():
+	print(f"{timeis()} {green}testing for extra *'s in bases")
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	counter = 0
+	allwords = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		root = dpd_df.loc[row, "Pāli Root"]
+		root_clean = re.sub("√", "", root)
+		base = dpd_df.loc[row, "Base"]
+		if base != "":
+			if re.findall(f" > {root_clean}", base) and \
+			re.findall(r"\*", base) and \
+			not re.findall(">.+>", base):
+				# print(headword, base)
+				allwords.append(headword)
+				if counter == 0:
+					txt_file1.write(f"\n{line_break}\ndelete * from base\n{line_break}\n")
+					txt_file2.write(f"\n{line_break}\ndelete * from base\n{line_break}\n")
+				if counter <= 10:
+					txt_file1.write(f"{headword} {base}\n")
+				txt_file2.write(f"{headword} {base}\n")
+				counter += 1
+
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+def vuddhi(root):
+	root = re.sub("a", "ā", root)
+	root = re.sub("i", "ī", root)
+	root = re.sub("u", "ū", root)
+	return root
+
+def bases_needs_star():
+	print(f"{timeis()} {green}testing for no *'s in bases")
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	counter = 0
+	allwords = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		root = dpd_df.loc[row, "Pāli Root"]
+		root_clean = re.sub("√", "", root)
+		root_vuddhi = vuddhi(root_clean)
+		sign = dpd_df.loc[row, "Sgn"]
+		base = dpd_df.loc[row, "Base"]
+
+		if base != "":
+			if re.findall("a|u|i", root) and \
+			re.findall(r"\*", sign) and \
+			re.findall(f" > {root_vuddhi}", base) and \
+			not re.findall(r"\*", base) and \
+			not re.findall(">.+>", base):
+				# print(headword, root_vuddhi, base)
+				allwords.append(headword)
+				if counter == 0:
+					txt_file1.write(f"\n{line_break}\nadd * to base\n{line_break}\n")
+					txt_file2.write(f"\n{line_break}\nadd * to base\n{line_break}\n")
+				if counter <= 10:
+					txt_file1.write(f"{headword} {base}\n")
+				txt_file2.write(f"{headword} {base}\n")
+				counter += 1
+
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+
+def root_family_mismatch():
+	print(f"{timeis()} {green}testing for root = family")
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	counter = 0
+	allwords = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		root = dpd_df.loc[row, "Pāli Root"]
+		if root == "":
+			root = "[empty]"
+		root_clean = re.sub("√", "", root)
+		family = dpd_df.loc[row, "Family"]
+		if family == "":
+			family = "[empty]"
+		family_clean = re.sub(".*√", "", family)
+		if root_clean != family_clean:
+			allwords.append(headword)
+			if counter == 0:
+				txt_file1.write(f"\n{line_break}\nroot family mismatch\n{line_break}\n")
+				txt_file2.write(f"\n{line_break}\nroot family mismatch\n{line_break}\n")
+			if counter <= 10:
+				txt_file1.write(f"{headword}. {root} ≠ {family}\n")
+			txt_file2.write(f"{headword}. {root} ≠ {family}\n")
+			counter += 1
+
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+
+def root_construction_mismatch():
+	print(f"{timeis()} {green}testing for root = construction")
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	counter = 0
+	allwords = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		root = dpd_df.loc[row, "Pāli Root"]
+		if root == "":
+			root = "[empty]"
+		construction = dpd_df.loc[row, "Construction"]
+		if re.findall ("√", construction):
+			construction_line1 = re.sub("\n.+", "", construction)
+			construction_clean = re.sub("(.*)(√.[^ ]*)(.*)", "\\2", construction_line1)
+			if root != construction_clean:
+				allwords.append(headword)
+				# print(f"h: {headword} - r: {root} - c: {construction_line1} - cc: {construction_clean}")
+				if counter == 0:
+					txt_file1.write(f"\n{line_break}\nroot construction mismatch\n{line_break}\n")
+					txt_file2.write(f"\n{line_break}\nroot construction mismatch\n{line_break}\n")
+				if counter <= 10:
+					txt_file1.write(f"{headword}. {root} ≠ {construction_line1}\n")
+				txt_file2.write(f"{headword}. {root} ≠ {construction_line1}\n")
+				counter += 1
+
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+def family_construction_mismatch():
+	print(f"{timeis()} {green}testing for family = construction")
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	counter = 0
+	allwords = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		family = dpd_df.loc[row, "Family"]
+		family_clean = re.sub(".*√", "√", family)
+		construction = dpd_df.loc[row, "Construction"]
+		if re.findall ("√", construction):
+			construction_line1 = re.sub("\n.+", "", construction)
+			construction_clean = re.sub("(.*)(√.[^ ]*)(.*)", "\\2", construction_line1)
+			if family_clean != construction_clean:
+				allwords.append(headword)
+				# print(f"h: {headword} /n f: {family}\nc: {construction_line1}\nfc: {family_clean}\ncc: {construction_clean}\n")
+				if counter == 0:
+					txt_file1.write(f"\n{line_break}\nfamily construction mismatch\n{line_break}\n")
+					txt_file2.write(f"\n{line_break}\nfamily construction mismatch\n{line_break}\n")
+				if counter <= 10:
+					txt_file1.write(f"{headword}. {family} ≠ {construction_line1}\n")
+				txt_file2.write(f"{headword}. {family} ≠ {construction_line1}\n")
+				counter += 1
+
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+
+def root_base_mismatch():
+	print(f"{timeis()} {green}testing for root = base")
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	counter = 0
+	allwords = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		root = dpd_df.loc[row, "Pāli Root"]
+		if root == "":
+			root = "[empty]"
+		base = dpd_df.loc[row, "Base"]
+		base_clean = re.sub("(√.[^ ]*)(.*)", "\\1", base)
+		if base != "":
+			if root != base_clean:
+				allwords.append(headword)
+				# print(f"h: {headword}\nb: {base}\nr: {root}\nbc: {base_clean}\n""")
+
+				if counter == 0:
+					txt_file1.write(
+						f"\n{line_break}\nroot base mismatch\n{line_break}\n")
+					txt_file2.write(
+						f"\n{line_break}\nroot base mismatch\n{line_break}\n")
+				if counter <= 10:
+					txt_file1.write(f"{headword}. {root} ≠ {base}\n")
+				txt_file2.write(f"{headword}. {root} ≠ {base}\n")
+				counter += 1
+
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+def complete_root_matrix():
+	print(f"{timeis()} {green}finding roots that need adding")
+
+	# ods_file = "../dpd.ods"
+	# csv_file = "../csvs/roots2.csv"
+	# # roots_df = pd.read_excel(ods_file, sheet_name="Roots", engine="odf")
+	# print(roots_df)
+	
+	roots_df = pd.read_csv("../csvs/roots.csv", sep="\t")
+	roots_df.fillna("", inplace=True)
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	 
+	# print(roots_df)
+
+	min_df = roots_df.sort_values(["Count"])
+	test1 = min_df["Count"] != 0
+	test2 = min_df["matrix test"] != "√"
+	min_df = min_df[test1 & test2]
+	min_df = min_df[["Root", "Count"]].head(9)
+	min_df = str(min_df.to_string(header=None))
+
+	txt_file1.write(f"\n{line_break}\nadd info to roots\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nadd info to roots\n{line_break}\n")
+	txt_file1.write(f"{min_df}\n")
+	txt_file2.write(f"{min_df}\n")
+	
+	max_df = roots_df.sort_values(["Count"], ascending=False)
+	test1 = max_df["Count"] != 0
+	test2 = max_df["matrix test"] != "√"
+	max_df = max_df[test1 & test2]
+	max_df = max_df[["Root", "Count"]].head(1)
+	max_df = str(max_df.to_string(header=None))
+	txt_file1.write(f"{max_df}\n")
+	txt_file2.write(f"{max_df}\n")
+
+
 tic()
 make_new_dpd_csv()
 setup_dfs()
@@ -987,7 +1260,17 @@ run_test_formulas()
 test_derived_from_in_family2()
 pos_does_not_equal_gram()
 pos_does_not_equal_pattern()
+# reset_lastrun()
+# derivatives_in_compounds()
+bases_contains_star()
+bases_needs_star()
+root_family_mismatch()
+root_construction_mismatch()
+family_construction_mismatch()
+root_base_mismatch()
+complete_root_matrix()
+
+
 print_columns()
 open_test_results()
-# reset_lastrun()
 tic()

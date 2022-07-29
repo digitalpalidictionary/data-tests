@@ -17,3 +17,5 @@ output/missing_number_lastrun
 output/test_formulas_lastrun
 dpd.ods
 dpd.csv
+__pycache__/dpd_tests.cpython-310.pyc
+output/missingword.tsv
