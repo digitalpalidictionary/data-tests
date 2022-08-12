@@ -448,11 +448,58 @@ def write_all_words(allwords, txt_file1, txt_file2):
 				txt_file2.write(f"|{word}")
 		txt_file2.write(f")$\n")
 
+def duplicate_meanings():
+	print(f"{timeis()} {green}finding duplicate meanings in family2", end=" ")
+	family2_list = dpd_df["Family2"].to_list()
+
+	# make a list of all words with double meaniings
+
+	duplicate_meaning_list = []
+	for sublist in family2_list:
+		word_list = sublist.split(" ")
+		for word in word_list:
+			if re.findall("\d", word):
+				word = re.sub("\d", "", word)
+				duplicate_meaning_list.append(word)
+	duplicate_meaning_list = sorted(set(duplicate_meaning_list))
+
+	# write dupes to file
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	allwords = []
+	counter = 0
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		family2 = dpd_df.loc[row, "Family2"]
+		family2_list = family2.split(" ")
+		for word in family2_list:
+			if word in duplicate_meaning_list:
+				counter += 1
+				allwords.append(headword)
+				if counter == 1:
+					txt_file1.write(f"{line_break}\nwords with duplicate meanings family2\n{line_break}\n")
+					txt_file2.write(f"{line_break}\nwords with duplicate meanings family2\n{line_break}\n")
+				if counter <= 10:
+					txt_file1.write (f"{headword}\t{word}\n")
+				txt_file2.write(f"{headword}\t{word}\n")
+			
+	write_all_words(allwords, txt_file1, txt_file2)
+
+	if counter == 0:
+		print(f"{white} ok")
+	else:
+		print(f"{white}{len(allwords)}")
+
+	txt_file1.close()
+	txt_file2.close()
+
 def test_headword_in_inflections():
 	print(f"{timeis()} {green}test if headword in inflection table")
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open ("output/test_results_all.txt", 'a')
-	
+
 	ignore_pos = ["idiom", "abs", "ger", "ind", "sandhi", "inf", "prefix", "prp", "abbrev", "cs", "letter", "suffix", "prefix"]
 	ignore_patterns = [
 		"ar masc",
@@ -1079,14 +1126,12 @@ def root_family_mismatch():
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
 		root = dpd_df.loc[row, "Pāli Root"]
-		if root == "":
-			root = "[empty]"
 		root_clean = re.sub("√", "", root)
 		family = dpd_df.loc[row, "Family"]
 		if family == "":
 			family = "[empty]"
 		family_clean = re.sub(".*√", "", family)
-		if root_clean != family_clean:
+		if root_clean != family_clean and root != "":
 			allwords.append(headword)
 			if counter == 0:
 				txt_file1.write(f"\n{line_break}\nroot family mismatch\n{line_break}\n")
@@ -1113,13 +1158,11 @@ def root_construction_mismatch():
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
 		root = dpd_df.loc[row, "Pāli Root"]
-		if root == "":
-			root = "[empty]"
 		construction = dpd_df.loc[row, "Construction"]
 		if re.findall ("√", construction):
 			construction_line1 = re.sub("\n.+", "", construction)
 			construction_clean = re.sub("(.*)(√.[^ ]*)(.*)", "\\2", construction_line1)
-			if root != construction_clean:
+			if root != construction_clean and root != "":
 				allwords.append(headword)
 				# print(f"h: {headword} - r: {root} - c: {construction_line1} - cc: {construction_clean}")
 				if counter == 0:
@@ -1204,6 +1247,45 @@ def root_base_mismatch():
 	txt_file1.close()
 	txt_file2.close()
 
+
+def root_sign_base_mismatch():
+	print(f"{timeis()} {green}testing for root sign = base")
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	counter = 0
+	allwords = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		root_sign = dpd_df.loc[row, "Sgn"]
+		root_sign = re.sub("\\*", "", root_sign)
+		root_sign = re.sub("\\+", "", root_sign)
+		base = dpd_df.loc[row, "Base"]
+		base = re.sub("\\*", "", base)
+		base = re.sub("\\+", "", base)
+
+		if base != "" and \
+		not re.findall("intens|desid|perf|fut", base):
+			if not re.findall(root_sign, base):
+				allwords.append(headword)
+				# print(f"h: {headword}\nb: {base}\nr: {root_sign}\nbc: {base}\n""")
+
+				if counter == 0:
+					txt_file1.write(
+						f"\n{line_break}\nroot sign base mismatch\n{line_break}\n")
+					txt_file2.write(
+						f"\n{line_break}\nroot sign base mismatch\n{line_break}\n")
+				if counter <= 10:
+					txt_file1.write(f"{headword}. '{root_sign}' ≠ '{base}'\n")
+				txt_file2.write(f"{headword}. '{root_sign}' ≠ '{base}'\n")
+				counter += 1
+
+	if counter != 0:
+		txt_file2.write(f"[{counter}]\n")
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
 def complete_root_matrix():
 	print(f"{timeis()} {green}finding roots that need adding")
 
@@ -1220,34 +1302,109 @@ def complete_root_matrix():
 	 
 	# print(roots_df)
 
-	min_df = roots_df.sort_values(["Count"])
-	test1 = min_df["Count"] != 0
-	test2 = min_df["matrix test"] != "√"
-	min_df = min_df[test1 & test2]
-	min_df = min_df[["Root", "Count"]].head(9)
-	min_df = str(min_df.to_string(header=None))
+	mid_df = roots_df.sort_values(["Count", "Root"])
+	test1 = mid_df["Count"] != 0
+	test2 = mid_df["matrix test"] != "√"
+	mid_df = mid_df[test1 & test2]
+	mid_df = mid_df.reset_index()
+	mid_df_half = len(mid_df)/2
+	mid_df = mid_df.loc[mid_df_half-5:mid_df_half+4, ["Root", "Count"]]
+	mid_df = str(mid_df.to_string(header=None))
 
 	txt_file1.write(f"\n{line_break}\nadd info to roots\n{line_break}\n")
 	txt_file2.write(f"\n{line_break}\nadd info to roots\n{line_break}\n")
-	txt_file1.write(f"{min_df}\n")
-	txt_file2.write(f"{min_df}\n")
+	txt_file1.write(f"{mid_df}\n")
+	txt_file2.write(f"{mid_df}\n")
 	
-	max_df = roots_df.sort_values(["Count"], ascending=False)
-	test1 = max_df["Count"] != 0
-	test2 = max_df["matrix test"] != "√"
-	max_df = max_df[test1 & test2]
-	max_df = max_df[["Root", "Count"]].head(1)
-	max_df = str(max_df.to_string(header=None))
-	txt_file1.write(f"{max_df}\n")
-	txt_file2.write(f"{max_df}\n")
+	txt_file1.close()
+	txt_file2.close()
 
+def random_words():
+	print(f"{timeis()} {green}twenty words - root or compound?")
+	
+	import random
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	
+	pos = ['idiom', 'sandhi', 'prefix', 'pron']
+	
+	test1 = dpd_df['Meaning IN CONTEXT'] == ""
+	test2 = dpd_df['Pāli Root'] == ""
+	test3 = ~dpd_df['Grammar'].str.contains("\\bcomp\\b")
+	test4 = ~dpd_df['Grammar'].str.contains("\\bfrom .+$")
+	test5 = ~dpd_df['POS'].isin(pos)
+	filter = test1 & test2 & test3 & test4 & test5
+	
+	filter_df = dpd_df.loc[filter, ["Pāli1", "POS", "Buddhadatta"]]
+	filter_df_len = len(filter_df)
+	x = random.randint(0, filter_df_len-20)
+	y = x+20
+	filter_df = filter_df.iloc[x:y]
+	
+	txt_file1.write(f"\n{line_break}\nroot or compound?\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nroot or compound?\n{line_break}\n")
+
+	allwords = []
+	counter = 0
+	for row in range(20):
+		headword = filter_df.iloc[row,0]
+		pos = filter_df.iloc[row, 1]
+		meaning = filter_df.iloc[row, 2]
+		allwords.append(headword)
+
+		if counter < 10:
+			txt_file1.write(f"{headword}\t{pos}\t{meaning}\n")
+		txt_file2.write(f"{headword}\t{pos}\t{meaning}\n")
+	
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+
+def identical_meanings():
+	print(f"{timeis()} {green}meanings identical")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+
+	dpd_df['Meaning IN CONTEXT'] = dpd_df['Meaning IN CONTEXT'].str.replace("\\(.+\\)", "")
+	dpd_df['Buddhadatta'] = dpd_df['Buddhadatta'].str.replace("\\(.+\\)", "")
+
+	test1 = dpd_df['Meaning IN CONTEXT'] == dpd_df['Buddhadatta']
+	test2 = dpd_df['Meaning IN CONTEXT'].str.contains(";| ")
+	filter = test1 & test2
+	filter_df = dpd_df.loc[filter, ["Pāli1", "Meaning IN CONTEXT", "Buddhadatta"]]
+	print(filter_df)
+	filter_df_len = len(filter_df)
+
+	txt_file1.write(f"\n{line_break}\nmeanings identical\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nrmeanings identical\n{line_break}\n")
+
+	allwords = []
+	counter = 0
+	for row in range(filter_df_len):
+		headword = filter_df.iloc[row, 0]
+		meaning1 = filter_df.iloc[row, 1]
+		meaning2 = filter_df.iloc[row, 2]
+		allwords.append(headword)
+
+		if counter < 10:
+			txt_file1.write(f"{headword}\t{meaning1}\t{meaning2}\n")
+		txt_file2.write(f"{headword}\t{meaning1}\t{meaning2}\n")
+		counter+=1
+		
+	txt_file2.write(f"{counter}")
+	write_all_words(allwords, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
 
 tic()
 make_new_dpd_csv()
 setup_dfs()
 tests_data_integrity_tests()
 generate_test_results()
-# test_words_construction_are_headwords()
+duplicate_meanings()
 test_headword_in_inflections()
 test_suffix_matches_pāli1()
 test_construction_line1_matches_pāli1()
@@ -1260,17 +1417,21 @@ run_test_formulas()
 test_derived_from_in_family2()
 pos_does_not_equal_gram()
 pos_does_not_equal_pattern()
-# reset_lastrun()
-# derivatives_in_compounds()
 bases_contains_star()
 bases_needs_star()
 root_family_mismatch()
 root_construction_mismatch()
 family_construction_mismatch()
 root_base_mismatch()
+root_sign_base_mismatch()
 complete_root_matrix()
-
+random_words()
 
 print_columns()
 open_test_results()
 tic()
+
+# test_words_construction_are_headwords()
+# reset_lastrun()
+# derivatives_in_compounds()
+# identical_meanings()
