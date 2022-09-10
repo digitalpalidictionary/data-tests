@@ -14,6 +14,7 @@ import stat
 import pickle
 from timeis import timeis, yellow, blue, white, green, red, line, tic, toc
 from test_formulas import setup_dpd_df, test_formulas, export_ods_with_formulas
+from family2_test import construction_does_not_equal_family2
 
 warnings.filterwarnings("ignore", 'This pattern has match groups')
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -44,7 +45,7 @@ def make_new_dpd_csv():
 	dpd_csv_mod_time = time.ctime(dpd_csv_stats[stat.ST_MTIME])
 
 	print(f"{timeis()} {green}dpd.csv last modified on \t\t{blue}{dpd_csv_mod_time}{white}")
-	yn = (input(f"{timeis()} convert ods to dpd.csv?(y/n)\t{blue}"))
+	yn = (input(f"{timeis()} convert ods to dpd.csv? (y/n)\t{blue}"))
 
 	if yn == "y":
 		print(f"{timeis()} {green}reading ods_file")
@@ -462,6 +463,7 @@ def duplicate_meanings():
 				word = re.sub("\d", "", word)
 				duplicate_meaning_list.append(word)
 	duplicate_meaning_list = sorted(set(duplicate_meaning_list))
+	duplicate_meaning_list.remove("")
 
 	# write dupes to file
 
@@ -806,7 +808,7 @@ def pali_words_in_english_meaning():
 	print(f"{timeis()} {green}test if pāli words in english meanings")
 
 	allwords = []
-	exceptions_set = {"i"}
+	exceptions_set = {"i", "me"}
 	# exceptions_set = {"a", "abhidhamma", "ajātasattu", "ala", "an", "ana", "anuruddha", "anāthapiṇḍika", "apadāna", "arahant", "are", "assapura", "avanti", "aya", "aṅga", "aṅguttara", "aṭṭhakathā", "aṭṭhakavagga", "bhagga", "bhoja", "bhāradvāja", "bhātaragāma", "bhū", "bimbisāra", "bodhi", "bodhisatta", "brahma"}
 
 	txt_file1 = open("output/test_results.txt", 'a')
@@ -855,7 +857,7 @@ def test_derived_from_in_family2():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open("output/test_results_all.txt", 'a')
 
-	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", "abhiṅkharitvā"]
+	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", "abhiṅkharitvā", "dhammani"]
 	allwords = []
 	
 	counter = 0
@@ -897,7 +899,7 @@ def test_derived_from_in_family2():
 def print_columns():
 	with open("output/test_results.txt", 'a') as txt_file:
 		headings = list(dpd_df.columns.values)
-		txt_file.write (f"{line_break}\n{headings}\n")
+		txt_file.write (f"\n{line_break}\n{headings}\n")
 		txt_file.write(f"{line_break}\n")
 		txt_file.write(f"Notez in Anki\n")
 		txt_file.write(f"Notez in Google Sheets\n")
@@ -1399,6 +1401,103 @@ def identical_meanings():
 	txt_file1.close()
 	txt_file2.close()
 
+
+def add_family2():
+	print(f"{timeis()} {green}add family2")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	
+	test1 = dpd_df['Meaning IN CONTEXT'] != ""
+	test2 = dpd_df['Pāli Root'] == ""
+	filter = test1 & test2
+	filter_df = dpd_df.loc[filter]
+	filter_df = filter_df.reset_index()
+	filter_df_len = len(filter_df)
+	
+	exceptions = ["", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena", "ta", "na > a", "eta", "ya", "ima", "sutta"]
+
+	wic_dict = {}
+	for row in range(filter_df_len):
+		headword = filter_df.loc[row, "Pāli1"]
+		family2 = filter_df.loc[row, "Family2"]
+		construction = filter_df.loc[row, "Construction"]
+		if family2 == "":
+			construction = re.sub("\n.+", "", construction)
+			words_in_constr = construction.split(" + ")
+			for word in words_in_constr:
+				if word not in wic_dict:
+					wic_dict[word] = 1
+				if word in wic_dict:
+					wic_dict[word] += 1
+	for exception in exceptions:
+		try:
+			wic_dict.pop(exception)
+		except:
+			print(f"{timeis()} {red}{exception}")
+
+	wic_df = pd.DataFrame.from_dict(wic_dict, orient='index')
+	wic_df.sort_values(by=[0], inplace=True, ascending=False)
+
+	txt_file1.write(f"\n{line_break}\nadd family2\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nadd family2\n{line_break}\n")
+
+	for index in range(10):
+		searchword = wic_df.index[index]
+		allwords= []
+		for row in range(filter_df_len):
+			headword = filter_df.loc[row, "Pāli1"]
+			family2 = filter_df.loc[row, "Family2"]
+			construction = filter_df.loc[row, "Construction"]
+
+			if re.findall(f"\\b{searchword}\\b", construction):
+				if not re.findall(f"\\b{searchword}\\d*\\b", family2):
+					allwords.append(headword)
+	
+		txt_file1.write(f"{searchword} {len(allwords)}\n")
+		txt_file2.write(f"{searchword} {len(allwords)}\n")
+		txt_file1.write(f"^(")
+		txt_file2.write(f"^(")
+		for word in allwords:
+			if word != allwords[-1]:
+				txt_file1.write(f"{word}|")
+				txt_file2.write(f"{word}|")
+			else:
+				txt_file1.write(f"{word})$\n\n")
+				txt_file2.write(f"{word})$\n\n")
+
+	txt_file1.close()
+	txt_file2.close()
+
+
+def test_family2(dpd_df, dpd_df_length):
+	print(f"{timeis()} {green}testing if words in construction are in family2", end=" ")
+
+	exceptions = ["accha", "an", "ana"]
+	
+	failures = construction_does_not_equal_family2(
+		dpd_df, dpd_df_length, exceptions)
+	print(f"{white}{len(failures)}")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+
+	txt_file1.write(f"\n{line_break}\nwords in comps not in family2\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nwords in comps not in family2\n{line_break}\n")
+
+	counter = 0
+	for word in failures:
+		if counter < 10:
+			txt_file1.write(f"\\b{word}\\b\n")
+		txt_file2.write(f"\\b{word}\\b\n")
+		counter += 1
+	txt_file1.write(f"10/{counter}")
+	txt_file2.write(f"{counter}")
+
+	txt_file1.close()
+	txt_file2.close()
+
+
 tic()
 make_new_dpd_csv()
 setup_dfs()
@@ -1426,6 +1525,8 @@ root_base_mismatch()
 root_sign_base_mismatch()
 complete_root_matrix()
 random_words()
+add_family2()
+test_family2(dpd_df, dpd_df_length)
 
 print_columns()
 open_test_results()

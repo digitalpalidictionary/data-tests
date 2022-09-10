@@ -19,3 +19,4 @@ dpd.ods
 dpd.csv
 __pycache__/dpd_tests.cpython-310.pyc
 output/missingword.tsv
+__pycache__/family2_test.cpython-310.pyc
