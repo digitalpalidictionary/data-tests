@@ -12,6 +12,8 @@ import os
 import time
 import stat
 import pickle
+import random
+
 from timeis import timeis, yellow, blue, white, green, red, line, tic, toc
 from test_formulas import setup_dpd_df, test_formulas, export_ods_with_formulas
 from family2_test import construction_does_not_equal_family2
@@ -857,7 +859,9 @@ def test_derived_from_in_family2():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open("output/test_results_all.txt", 'a')
 
-	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", "abhiṅkharitvā", "dhammani"]
+	exceptions = ["ana 1", "ana 2", "assā 2", "ato",
+               "atta 2", "abhiṅkharitvā", "dhammani", 
+			   "daddabhāyati", "pakudhaka", "vakkali"]
 	allwords = []
 	
 	counter = 0
@@ -1310,7 +1314,7 @@ def complete_root_matrix():
 	mid_df = mid_df[test1 & test2]
 	mid_df = mid_df.reset_index()
 	mid_df_half = len(mid_df)/2
-	mid_df = mid_df.loc[mid_df_half-5:mid_df_half+4, ["Root", "Count"]]
+	mid_df = mid_df.loc[mid_df_half-5:mid_df_half+4, ["Root", "Meaning", "Count"]]
 	mid_df = str(mid_df.to_string(header=None))
 
 	txt_file1.write(f"\n{line_break}\nadd info to roots\n{line_break}\n")
@@ -1323,8 +1327,6 @@ def complete_root_matrix():
 
 def random_words():
 	print(f"{timeis()} {green}twenty words - root or compound?")
-	
-	import random
 
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open("output/test_results_all.txt", 'a')
@@ -1410,12 +1412,13 @@ def add_family2():
 	
 	test1 = dpd_df['Meaning IN CONTEXT'] != ""
 	test2 = dpd_df['Pāli Root'] == ""
-	filter = test1 & test2
+	test3 = ~dpd_df['Pāli2'].str.contains("suttaṃ")
+	filter = test1 & test2 & test3
 	filter_df = dpd_df.loc[filter]
 	filter_df = filter_df.reset_index()
 	filter_df_len = len(filter_df)
 	
-	exceptions = ["", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena", "ta", "na > a", "eta", "ya", "ima", "sutta"]
+	exceptions = ["", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena", "ta", "na > a", "eta", "ya", "ima", "ehi", "saṃ", "tumha", "sa"]
 
 	wic_dict = {}
 	for row in range(filter_df_len):
@@ -1473,7 +1476,7 @@ def add_family2():
 def test_family2(dpd_df, dpd_df_length):
 	print(f"{timeis()} {green}testing if words in construction are in family2", end=" ")
 
-	exceptions = ["accha", "an", "ana"]
+	exceptions = ["accha", "an", "ana", "asa", "asati", "atta"]
 	
 	failures = construction_does_not_equal_family2(
 		dpd_df, dpd_df_length, exceptions)
@@ -1494,6 +1497,98 @@ def test_family2(dpd_df, dpd_df_length):
 	txt_file1.write(f"10/{counter}")
 	txt_file2.write(f"{counter}")
 
+	txt_file1.close()
+	txt_file2.close()
+
+
+def test_base_eqals_construction():
+	print(f"{timeis()} {green}test base equals construction")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+
+	test1 = dpd_df['Base'] != ""
+	test2 = dpd_df['Construction'] != ""
+	test3 = dpd_df['Meaning IN CONTEXT'] != ""
+	filter = test1 & test2 & test3
+	filter_df = dpd_df.loc[filter]
+	filter_df = filter_df.reset_index()
+	filter_df_len = len(filter_df)
+
+	allwords = []
+	counter = 0
+
+	txt_file1.write(f"\n{line_break}\nbase ≠ construction\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nrbase ≠ construction\n{line_break}\n")
+
+	for row in range(filter_df_len):
+		headword = filter_df.loc[row, "Pāli1"]
+		base = filter_df.loc[row, "Base"]
+		base_clean = re.sub("^.+> ", "", base)
+		base_clean = re.sub(" \\(.+$", "", base_clean)
+		construction = filter_df.loc[row, "Construction"]
+		
+		if re.findall(f"(^| ){base_clean} ", construction) == []:
+			allwords.append(headword)
+			if counter < 10:
+				txt_file1.write(f"{headword}. {base_clean}. {construction}\n")
+			txt_file2.write(f"{headword}. {base_clean}. {construction}\n")
+			counter+=1
+
+	txt_file1.write(f"{len(allwords)}\n\n")
+	txt_file2.write(f"{len(allwords)}\n\n")
+
+	counter = 0
+	txt_file1.write(f"^(")
+	txt_file2.write(f"^(")
+	for word in allwords:
+		if word != allwords[-1]:
+			if counter < 10:
+				txt_file1.write(f"{word}|")
+			txt_file2.write(f"{word}|")
+		else:
+			txt_file1.write(f"{word})$\n\n")
+			txt_file2.write(f"{word})$\n\n")
+		counter += 1
+
+	txt_file1.close()
+	txt_file2.close()
+
+
+def add_commentary_definitions():
+	print(f"{timeis()} {green}add commentary defintions")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+
+	test1 = dpd_df['Meaning IN CONTEXT'] != ""
+	test2 = dpd_df['Commentary'] == ""
+	test3 = dpd_df['Grammar'].str.contains("\\bcomp\\b")
+	filter = test1 & test2 & test3
+
+	filter_df = dpd_df.loc[filter, ["Pāli1", "POS", "Meaning IN CONTEXT"]]
+	filter_df_len = len(filter_df)
+	x = random.randint(0, filter_df_len-20)
+	y = x+10
+	filter_df = filter_df.iloc[x:y]
+	filter_df.reset_index(inplace=True, drop=True)
+
+	txt_file1.write(f"\n{line_break}\nadd commentary definitions\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nadd commentary definitions\n{line_break}\n")
+
+	allwords = []
+	counter = 0
+	for row in range(10):
+		headword = filter_df.iloc[row, 0]
+		pos = filter_df.iloc[row, 1]
+		meaning = filter_df.iloc[row, 2]
+		allwords.append(headword)
+
+		if counter < 10:
+			txt_file1.write(f"{headword}\t{pos}\t{meaning}\n")
+		txt_file2.write(f"{headword}\t{pos}\t{meaning}\n")
+
+	write_all_words(allwords, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
@@ -1527,6 +1622,8 @@ complete_root_matrix()
 random_words()
 add_family2()
 test_family2(dpd_df, dpd_df_length)
+test_base_eqals_construction()
+add_commentary_definitions()
 
 print_columns()
 open_test_results()
