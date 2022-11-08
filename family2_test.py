@@ -35,6 +35,7 @@ def generate_lists(dpd_df, dpd_df_len, exceptions):
 		pali = dpd_df.loc[row, "Pāli1"]
 		pali_clean = re.sub (r" \d*$", "", pali)
 		grammar = dpd_df.loc[row, "Grammar"]
+		base = dpd_df.loc[row, "Base"]
 		construction = dpd_df.loc[row, "Construction"]
 		construction = re.sub("<br\\/>.+", "", construction)  # strip line2
 		if re.findall(">", construction):
@@ -69,7 +70,7 @@ def generate_lists(dpd_df, dpd_df_len, exceptions):
 
 		test1 = meaning != ""
 
-		if test1 :
+		if test1:
 			all_clean_headwords += [pali_clean]
 
 		# list of all empty family2

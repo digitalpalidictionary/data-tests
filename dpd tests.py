@@ -13,6 +13,7 @@ import time
 import stat
 import pickle
 import random
+import json
 
 from timeis import timeis, yellow, blue, white, green, red, line, tic, toc
 from test_formulas import setup_dpd_df, test_formulas, export_ods_with_formulas
@@ -465,7 +466,10 @@ def duplicate_meanings():
 				word = re.sub("\d", "", word)
 				duplicate_meaning_list.append(word)
 	duplicate_meaning_list = sorted(set(duplicate_meaning_list))
-	duplicate_meaning_list.remove("")
+	try:
+		duplicate_meaning_list.remove("")
+	except ValueError:
+		pass
 
 	# write dupes to file
 
@@ -565,7 +569,7 @@ def test_suffix_matches_pāli1():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open ("output/test_results_all.txt", 'a')
 
-	exceptions = ["adhipa", "bavh", "labbhā", "munī", "gatī", "visesi"]
+	exceptions = ["adhipa", "bavh", "labbhā", "munī", "gatī", "visesi", "khantī"]
 
 	allwords= []
 
@@ -605,7 +609,7 @@ def test_construction_line1_matches_pāli1():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open ("output/test_results_all.txt", 'a')
 
-	exceptions = ["abhijaññā", "acc", "adhipa", "aññā 2", "aññā 3", "anujaññā", "anupādā", "attanī", "chettu", "devāna", "dubbalī", "gāmaṇḍala 2", "gatī", "jaññā 2", "kayirā", "khaṇitti", "koṭṭhāsa 1", "koṭṭhāsa 2", "koṭṭhāsa 3", "labbhā", "lokasmi", "munī", "nājjhosa", "nānujaññā", "nāsiṃsatī", "nāsīsatī", "natthī", "paralokavajjabhayadassāvine", "paresa", "pariññā 2", "paṭivadeyyu", "phuseyyu", "sabbadhammāna", "saḷ", "sat 1", "sat 2", "upādā", "vijaññā", "visesi"]
+	exceptions = ["abhijaññā", "acc", "adhipa", "aññā 2", "aññā 3", "anujaññā", "anupādā", "attanī", "chettu", "devāna", "dubbalī", "gāmaṇḍala 2", "gatī", "jaññā 2", "kayirā", "khaṇitti", "koṭṭhāsa 1", "koṭṭhāsa 2", "koṭṭhāsa 3", "labbhā", "lokasmi", "munī", "nājjhosa", "nānujaññā", "nāsiṃsatī", "nāsīsatī", "natthī", "paralokavajjabhayadassāvine", "paresa", "pariññā 2", "paṭivadeyyu", "phuseyyu", "sabbadhammāna", "saḷ", "sat 1", "sat 2", "upādā", "vijaññā", "visesi", "govinda"]
 
 	counter = 0
 	allwords = []
@@ -859,9 +863,8 @@ def test_derived_from_in_family2():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open("output/test_results_all.txt", 'a')
 
-	exceptions = ["ana 1", "ana 2", "assā 2", "ato",
-               "atta 2", "abhiṅkharitvā", "dhammani", 
-			   "daddabhāyati", "pakudhaka", "vakkali"]
+	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", abhiṅkharitvā", "dhammani", "daddabhāyati", "pakudhaka", vakkali", "vammika", "vammīka"
+	]
 	allwords = []
 	
 	counter = 0
@@ -917,7 +920,6 @@ def open_test_results():
 	os.popen('code "output/test_results.txt"')
 	import os
 	os.popen('code "output/test_results_all.txt"')
-	print(f"{timeis()} {line_break}")
 
 def run_test_formulas():
 	print(f"{timeis()} {green}testing formulas")
@@ -1314,13 +1316,13 @@ def complete_root_matrix():
 	mid_df = mid_df[test1 & test2]
 	mid_df = mid_df.reset_index()
 	mid_df_half = len(mid_df)/2
-	mid_df = mid_df.loc[mid_df_half-5:mid_df_half+4, ["Root", "Meaning", "Count"]]
-	mid_df = str(mid_df.to_string(header=None))
+	mid_df_middle = mid_df.loc[mid_df_half-5:mid_df_half+4, ["Root", "Meaning", "Count"]]
+	mid_df_string = str(mid_df_middle.to_string(header=None))
 
-	txt_file1.write(f"\n{line_break}\nadd info to roots\n{line_break}\n")
+	txt_file1.write(f"\n{line_break}\nadd info to roots ({len(mid_df_middle)}/{len(mid_df)})\n{line_break}\n")
 	txt_file2.write(f"\n{line_break}\nadd info to roots\n{line_break}\n")
-	txt_file1.write(f"{mid_df}\n")
-	txt_file2.write(f"{mid_df}\n")
+	txt_file1.write(f"{mid_df_string}\n")
+	txt_file2.write(f"{mid_df_string}\n")
 	
 	txt_file1.close()
 	txt_file2.close()
@@ -1418,21 +1420,31 @@ def add_family2():
 	filter_df = filter_df.reset_index()
 	filter_df_len = len(filter_df)
 	
-	exceptions = ["", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena", "ta", "na > a", "eta", "ya", "ima", "ehi", "saṃ", "tumha", "sa"]
+	exceptions = ["", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena","ta", "na > a", "eta", "ya", "ima", "ehi", "saṃ", "tumha", "sa", "ka > ki", "e", "āya","mhā", "ū", "so", "i", "āhi", "me"]
 
+	no_thanks = ["sutta", "sikkhāpada", "ti", "smiṃ", "m", "ssā"]
 	wic_dict = {}
+	
 	for row in range(filter_df_len):
+		flag = False
 		headword = filter_df.loc[row, "Pāli1"]
 		family2 = filter_df.loc[row, "Family2"]
 		construction = filter_df.loc[row, "Construction"]
 		if family2 == "":
 			construction = re.sub("\n.+", "", construction)
 			words_in_constr = construction.split(" + ")
+
+			for word_in_constr in words_in_constr:
+				if word_in_constr in no_thanks:
+					flag = True
+
 			for word in words_in_constr:
-				if word not in wic_dict:
-					wic_dict[word] = 1
-				if word in wic_dict:
-					wic_dict[word] += 1
+				if flag != True:
+					if word not in wic_dict:
+						wic_dict[word] = 1
+					if word in wic_dict:
+						wic_dict[word] += 1
+
 	for exception in exceptions:
 		try:
 			wic_dict.pop(exception)
@@ -1462,12 +1474,13 @@ def add_family2():
 		txt_file1.write(f"^(")
 		txt_file2.write(f"^(")
 		for word in allwords:
-			if word != allwords[-1]:
-				txt_file1.write(f"{word}|")
-				txt_file2.write(f"{word}|")
-			else:
-				txt_file1.write(f"{word})$\n\n")
-				txt_file2.write(f"{word})$\n\n")
+			if word not in exceptions:
+				if word != allwords[-1]:
+					txt_file1.write(f"{word}|")
+					txt_file2.write(f"{word}|")
+				else:
+					txt_file1.write(f"{word})$\n\n")
+					txt_file2.write(f"{word})$\n\n")
 
 	txt_file1.close()
 	txt_file2.close()
@@ -1476,7 +1489,14 @@ def add_family2():
 def test_family2(dpd_df, dpd_df_length):
 	print(f"{timeis()} {green}testing if words in construction are in family2", end=" ")
 
-	exceptions = ["accha", "an", "ana", "asa", "asati", "atta"]
+	exceptions = ["accha", "an", 
+	"ana", "asa", "asati", "atta", 
+	"attha", "aṭṭha", "du", "dha", 
+	"dhā", "dur", "iṃ", "jāni", 
+	"jāniya", "kaccha", "kha", 
+	"kuttaka", "kā", "mi", 
+	"nettika", "nā", "ma", "pa"
+	]
 	
 	failures = construction_does_not_equal_family2(
 		dpd_df, dpd_df_length, exceptions)
@@ -1593,6 +1613,157 @@ def add_commentary_definitions():
 	txt_file2.close()
 
 
+def family2_no_meaning():
+	print(f"{timeis()} {green}family2 no meaning")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+
+	# list of all family2 words
+	all_family2 = []
+
+	for row in range(dpd_df_length):
+		family2 = dpd_df.loc[row, "Family2"]
+		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
+		
+		test1 = family2 != ""
+		test2 = meaning != ""
+
+		if test1 and test2:
+			all_family2 += (family2.split(" "))
+
+	all_family2 = set(all_family2)
+	
+	# check family2
+
+	exceptions = []
+	needs_meaning = []
+	counter = 0
+	
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		headword_clean = re.sub(" //d*$", "", headword)
+		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
+
+		test1 = headword_clean in all_family2
+		test2 = meaning == ""
+		test3 = headword not in exceptions
+
+		if test1 and test2 and test3:
+			needs_meaning += [headword]
+
+			if len(needs_meaning) == 1:
+				txt_file1.write(f"\n{line_break}\nfamily2 no meaning\n{line_break}\n")
+				txt_file2.write(f"\n{line_break}\nfamily2 no meaning\n{line_break}\n")
+
+			if counter < 10:
+				txt_file1.write(f"{headword}\n")
+			txt_file2.write(f"{headword}\n")
+	
+			counter+=1
+
+	txt_file1.write(f"{len(needs_meaning)}\n")
+	write_all_words(needs_meaning, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+
+def find_variants_and_synonyms():
+	print(f"{timeis()} {green}finding variants and synonyms")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	txt_file1.write(f"\n{line_break}\nvariants and synonyms\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nvariants and synonyms\n{line_break}\n")
+
+	all_meanigns = {}
+	exceptions = [
+		"-",
+		"name of a Licchavi layman",
+		"name of a monk",
+		"name of a group of deities",
+		"name of a privately enlightened Buddha",
+		"name of a naked ascetic",
+		"name of a river; one of the five great rivers of ancient India",
+		"name of an ascetic teacher", "name of a Brahman; one of three brothers", "name of a deity", "name of a country"
+		
+	]
+
+	# builds a dict of meaning: {pos:[headwords], pos:[headwords]}
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		headword_clean = re.sub(" \\d*$", "", headword)
+		pos = dpd_df.loc[row, "POS"]
+		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
+		meaning_clean = re.sub(" \\(.*?\\)", "", meaning)
+		synonyms = dpd_df.loc[row, "Synonyms – different word"]
+		variants = dpd_df.loc[row, "Variant – same constr or diff reading"]
+
+		test1 = meaning != ""
+		test2 = meaning not in exceptions
+
+		if test1 & test2:
+			if meaning_clean not in all_meanigns:
+				all_meanigns[meaning_clean] = {
+					pos: {'headwords': [headword], 'clean headwords': [headword_clean], 'synonyms': [], 'variants': []}}
+			else:
+				if pos not in all_meanigns[meaning_clean]:
+					all_meanigns[meaning_clean] = {
+					pos: {'headwords': [headword], 'clean headwords': [headword_clean], 'synonyms': [], 'variants': []}}
+				else:
+					all_meanigns[meaning_clean][pos]['headwords'] += [headword]
+					all_meanigns[meaning_clean][pos]['clean headwords'] += [headword_clean]
+		
+			if synonyms != "":
+				for synonym in synonyms.split(", "):
+					all_meanigns[meaning_clean][pos]['synonyms'] += [synonym]
+					
+			if variants != "":
+				for variant in variants.split(", "):
+					all_meanigns[meaning_clean][pos]['variants'] += [variant]
+
+		# structure
+		# meaning : pos
+		# pos : headwords + synonyms + variants
+
+	counter = 0
+	var_counter = 0
+	for meaning, poss in all_meanigns.items():
+		for pos, i in poss.items():
+			headwords = i['headwords']
+			clean_headwords = i['clean headwords']
+			synonyms = i['synonyms']
+			variants = i['variants']
+			if len(headwords) > 1:
+				if set(clean_headwords) != set(synonyms) and \
+					not set(clean_headwords).issubset(set(synonyms)) and \
+					set(clean_headwords) != set(variants) and \
+					not set(clean_headwords).issubset(set(variants)):
+					var_counter += 1
+					if counter < 20:
+						txt_file1.write(f"{meaning}\n")
+						txt_file1.write(f"^(")
+						for headword in headwords:
+							if headword != headwords[-1]:
+								txt_file1.write(f"{headword}|")
+							else:
+								txt_file1.write(f"{headword})$\n")
+						for headword in headwords:
+							headword_clean = re.sub(" \\d*$", "", headword)
+							if headword != headwords[-1]:
+								txt_file1.write(f"{headword_clean}, ")
+							else:
+								txt_file1.write(f"{headword_clean}")
+						txt_file1.write(f"\n\n")
+						counter += 1
+
+	txt_file1.write(f"{var_counter}")
+	txt_file1.close()
+	txt_file2.close()
+
+
+
 tic()
 make_new_dpd_csv()
 setup_dfs()
@@ -1622,12 +1793,14 @@ complete_root_matrix()
 random_words()
 add_family2()
 test_family2(dpd_df, dpd_df_length)
+family2_no_meaning()
 test_base_eqals_construction()
 add_commentary_definitions()
+find_variants_and_synonyms()
 
 print_columns()
 open_test_results()
-tic()
+toc()
 
 # test_words_construction_are_headwords()
 # reset_lastrun()
