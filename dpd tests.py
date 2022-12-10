@@ -863,7 +863,7 @@ def test_derived_from_in_family2():
 	txt_file1 = open("output/test_results.txt", 'a')
 	txt_file2 = open("output/test_results_all.txt", 'a')
 
-	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", abhiṅkharitvā", "dhammani", "daddabhāyati", "pakudhaka", vakkali", "vammika", "vammīka"
+	exceptions = ["ana 1", "ana 2", "assā 2", "ato", "atta 2", "abhiṅkharitvā", "dhammani", "daddabhāyati", "pakudhaka", "vakkali", "vammika", "vammīka", "koliyā", "bhaggava", "bhāradvāja 1", "cicciṭa", "cicciṭāyati", "kambojā", "sahali", "vāsiṭṭha", "yāmuna", "bhesajja", "ciṅgulaka", "soṇḍi", "sudinna 2",
 	]
 	allwords = []
 	
@@ -1316,7 +1316,7 @@ def complete_root_matrix():
 	mid_df = mid_df[test1 & test2]
 	mid_df = mid_df.reset_index()
 	mid_df_half = len(mid_df)/2
-	mid_df_middle = mid_df.loc[mid_df_half-5:mid_df_half+4, ["Root", "Meaning", "Count"]]
+	mid_df_middle = mid_df.loc[mid_df_half-15:mid_df_half+5, ["Root", "Meaning", "Count"]]
 	mid_df_string = str(mid_df_middle.to_string(header=None))
 
 	txt_file1.write(f"\n{line_break}\nadd info to roots ({len(mid_df_middle)}/{len(mid_df)})\n{line_break}\n")
@@ -1420,9 +1420,11 @@ def add_family2():
 	filter_df = filter_df.reset_index()
 	filter_df_len = len(filter_df)
 	
-	exceptions = ["", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena","ta", "na > a", "eta", "ya", "ima", "ehi", "saṃ", "tumha", "sa", "ka > ki", "e", "āya","mhā", "ū", "so", "i", "āhi", "me"]
-
-	no_thanks = ["sutta", "sikkhāpada", "ti", "smiṃ", "m", "ssā"]
+	exceptions = [
+		"", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena", "ta", "na > a", "eta", "ya", "ima", "ehi", "saṃ", "tumha", "sa", "ka > ki", "e", "āya", "mhā", "ū", "so", "i", "āhi", "me", "smā", "vant", "issā", "eyya", "nagaravinda", "esānaṃ", "ssaṃ", "ākaṃ", "esaṃ", "*a", "[d]", "vāja", "sara", "kuṇapa", "bhara", "[t]", "sāriputta", "ssa", "muru", "bhallika", "ānaṃ > aṃ", "[n]", "tara", "tha", "to", "tā", "udāyī", "uṃ", "biḷi"
+		]
+	
+	no_thanks = ["sutta", "sikkhāpada", "ti", "smiṃ", "m", "ssā", "pāḷi", "nikāya"]
 	wic_dict = {}
 	
 	for row in range(filter_df_len):
@@ -1489,13 +1491,7 @@ def add_family2():
 def test_family2(dpd_df, dpd_df_length):
 	print(f"{timeis()} {green}testing if words in construction are in family2", end=" ")
 
-	exceptions = ["accha", "an", 
-	"ana", "asa", "asati", "atta", 
-	"attha", "aṭṭha", "du", "dha", 
-	"dhā", "dur", "iṃ", "jāni", 
-	"jāniya", "kaccha", "kha", 
-	"kuttaka", "kā", "mi", 
-	"nettika", "nā", "ma", "pa"
+	exceptions = ["accha", "an", "ana", "asa", "asati", "atta", "attha", "aṭṭha", "du", "dha", "dhā", "dur", "iṃ", "jāni", "jāniya", "kaccha", "kha", "kuttaka", "kā", "mi", "nettika", "nā", "ma", "pa", "anāsava", "pati", "paṭi", "eyya", "sa", "revata", "santi", "satimant", "subhaddā", "bhūma", "niggahita", "nālaka", "sammatta", "seṭṭhi", "ssa", "bhisakka", "sumaṅgala", "susaṇṭhita", "asita", "tara", "teja", "tha", "to", "tā", "tāla", "udāyī", "ukkhittaka", "upanisā", "upanāyika", "upasagga", "uṃ", "vaca", "veyyākaraṇa", "veṇḍu", "vīta", "īya", "ṇaya", "ṇu"
 	]
 	
 	failures = construction_does_not_equal_family2(
@@ -1555,21 +1551,22 @@ def test_base_eqals_construction():
 			txt_file2.write(f"{headword}. {base_clean}. {construction}\n")
 			counter+=1
 
-	txt_file1.write(f"{len(allwords)}\n\n")
-	txt_file2.write(f"{len(allwords)}\n\n")
+	if len(allwords) != 0:
+		txt_file1.write(f"{len(allwords)}\n\n")
+		txt_file2.write(f"{len(allwords)}\n\n")
 
-	counter = 0
-	txt_file1.write(f"^(")
-	txt_file2.write(f"^(")
-	for word in allwords:
-		if word != allwords[-1]:
-			if counter < 10:
-				txt_file1.write(f"{word}|")
-			txt_file2.write(f"{word}|")
-		else:
-			txt_file1.write(f"{word})$\n\n")
-			txt_file2.write(f"{word})$\n\n")
-		counter += 1
+		counter = 0
+		txt_file1.write(f"^(")
+		txt_file2.write(f"^(")
+		for word in allwords:
+			if word != allwords[-1]:
+				if counter < 10:
+					txt_file1.write(f"{word}|")
+				txt_file2.write(f"{word}|")
+			else:
+				txt_file1.write(f"{word})$\n\n")
+				txt_file2.write(f"{word})$\n\n")
+			counter += 1
 
 	txt_file1.close()
 	txt_file2.close()
@@ -1657,13 +1654,13 @@ def family2_no_meaning():
 				txt_file2.write(f"\n{line_break}\nfamily2 no meaning\n{line_break}\n")
 
 			if counter < 10:
-				txt_file1.write(f"{headword}\n")
-			txt_file2.write(f"{headword}\n")
+				txt_file1.write(fr"\b{headword}\b\n")
+			txt_file2.write(fr"\b{headword}\b\n")
 	
 			counter+=1
 
 	txt_file1.write(f"{len(needs_meaning)}\n")
-	write_all_words(needs_meaning, txt_file1, txt_file2)
+	# write_all_words(needs_meaning, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
@@ -1685,9 +1682,45 @@ def find_variants_and_synonyms():
 		"name of a privately enlightened Buddha",
 		"name of a naked ascetic",
 		"name of a river; one of the five great rivers of ancient India",
-		"name of an ascetic teacher", "name of a Brahman; one of three brothers", "name of a deity", "name of a country"
-		
-	]
+		"name of an ascetic teacher", "name of a Brahman; one of three brothers", "name of a deity", "name of a country",
+		"that; such; so and so",
+		"oh!; oh no!; oh dear!; wow!",
+		"black antelope hide",
+		"modern; related to today",
+		"nothing",
+		"name of a nun",
+		"measure of volume",
+		"name of a heavenly city",
+		"name of a village",
+		"name of a pagoda",
+		"name of a wandering ascetic",
+		"unrelated; not blood-related",
+		"followed; walked after",
+		"compassionate; kind; concerned",
+		"not seeing",
+		"small; insignificant; minute; tiny",
+		"name of a Brahman",
+		"name of one of the three daughters of Death",
+		"name of a king",
+		"enlightened being; fourth stage of the path",
+		"name of a layman",
+		"name of a people",
+		"epithet of a class of devas",
+		"name of a town",
+		"example of a low name",
+		"kind of weapon",
+		"compassionate; kind; concerned",
+		"I am eternal; I am everlasting",
+		"name of an arahant",
+		"name of a holy river",
+		"name of a god",
+		"name of a torture",
+		"name of a Licchavi",
+		"name of a chieftain",
+		"family name",
+		"name of one the seven Bharata kings",
+
+		]
 
 	# builds a dict of meaning: {pos:[headwords], pos:[headwords]}
 
