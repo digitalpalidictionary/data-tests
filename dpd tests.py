@@ -875,16 +875,20 @@ def test_derived_from_in_family2():
 		derived_from = dpd_df.loc[row, "Derived from"]
 		root = dpd_df.loc[row, "Pāli Root"]
 		grammar = dpd_df.loc[row, "Grammar"]
+		word_family = dpd_df.loc[row, "Word Family"]
 		family2 = dpd_df.loc[row, "Family2"]
 		family2_list = family2.split(" ")
 
-		if headword not in exceptions and \
-		root == "" and \
-		pos != "pron" and \
-		meaning != "" and \
-		derived_from != "" and \
-        not re.findall(r"\bcomp\b", grammar) and \
-		family2 == "":
+		test1 = headword not in exceptions
+		test2 = root == ""
+		test3 = pos != "pron"
+		test4 = meaning != ""
+		test5 = derived_from != ""
+		test6 = not re.findall(r"\bcomp\b", grammar)
+		test7 = family2 == ""
+		test8 = word_family == ""
+
+		if test1 & test2 & test3 & test4 & test5 & test6 & test7 & test8:
 			allwords.append(headword)
 			if counter == 0:
 				txt_file1.write(
@@ -1134,7 +1138,8 @@ def root_family_mismatch():
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
 		root = dpd_df.loc[row, "Pāli Root"]
-		root_clean = re.sub("√", "", root)
+		root_clean = re.sub(" \\d*$", "", root)
+		root_clean = re.sub("√", "", root_clean)
 		family = dpd_df.loc[row, "Family"]
 		if family == "":
 			family = "[empty]"
@@ -1166,19 +1171,19 @@ def root_construction_mismatch():
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
 		root = dpd_df.loc[row, "Pāli Root"]
+		root_clean = re.sub(" \\d*$", "", root)
 		construction = dpd_df.loc[row, "Construction"]
 		if re.findall ("√", construction):
 			construction_line1 = re.sub("\n.+", "", construction)
 			construction_clean = re.sub("(.*)(√.[^ ]*)(.*)", "\\2", construction_line1)
-			if root != construction_clean and root != "":
+			if root_clean != construction_clean and root != "":
 				allwords.append(headword)
-				# print(f"h: {headword} - r: {root} - c: {construction_line1} - cc: {construction_clean}")
 				if counter == 0:
 					txt_file1.write(f"\n{line_break}\nroot construction mismatch\n{line_break}\n")
 					txt_file2.write(f"\n{line_break}\nroot construction mismatch\n{line_break}\n")
 				if counter <= 10:
-					txt_file1.write(f"{headword}. {root} ≠ {construction_line1}\n")
-				txt_file2.write(f"{headword}. {root} ≠ {construction_line1}\n")
+					txt_file1.write(f"{headword}. {root_clean} ≠ {construction_line1}\n")
+				txt_file2.write(f"{headword}. {root_clean} ≠ {construction_line1}\n")
 				counter += 1
 
 	if counter != 0:
@@ -1230,14 +1235,14 @@ def root_base_mismatch():
 	for row in range(dpd_df_length):
 		headword = dpd_df.loc[row, "Pāli1"]
 		root = dpd_df.loc[row, "Pāli Root"]
+		root_clean = re.sub (" \\d*$", "", root)
 		if root == "":
 			root = "[empty]"
 		base = dpd_df.loc[row, "Base"]
 		base_clean = re.sub("(√.[^ ]*)(.*)", "\\1", base)
 		if base != "":
-			if root != base_clean:
+			if root_clean != base_clean:
 				allwords.append(headword)
-				# print(f"h: {headword}\nb: {base}\nr: {root}\nbc: {base_clean}\n""")
 
 				if counter == 0:
 					txt_file1.write(
@@ -1245,8 +1250,9 @@ def root_base_mismatch():
 					txt_file2.write(
 						f"\n{line_break}\nroot base mismatch\n{line_break}\n")
 				if counter <= 10:
-					txt_file1.write(f"{headword}. {root} ≠ {base}\n")
-				txt_file2.write(f"{headword}. {root} ≠ {base}\n")
+					txt_file1.write(f"{headword}. {root_clean} ≠ {base}\n")
+				txt_file2.write(
+                f"{headword}. {root_clean} ≠ {base}\n")
 				counter += 1
 
 	if counter != 0:
@@ -1415,16 +1421,20 @@ def add_family2():
 	test1 = dpd_df['Meaning IN CONTEXT'] != ""
 	test2 = dpd_df['Pāli Root'] == ""
 	test3 = ~dpd_df['Pāli2'].str.contains("suttaṃ")
-	filter = test1 & test2 & test3
+	test4 = dpd_df['Word Family'] == ""
+	test5 = dpd_df['Pāli1'].str.len() < 33
+	
+	filter = test1 & test2 & test3 & test4 & test5
 	filter_df = dpd_df.loc[filter]
 	filter_df = filter_df.reset_index()
 	filter_df_len = len(filter_df)
 	
 	exceptions = [
-		"", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena", "ta", "na > a", "eta", "ya", "ima", "ehi", "saṃ", "tumha", "sa", "ka > ki", "e", "āya", "mhā", "ū", "so", "i", "āhi", "me", "smā", "vant", "issā", "eyya", "nagaravinda", "esānaṃ", "ssaṃ", "ākaṃ", "esaṃ", "*a", "[d]", "vāja", "sara", "kuṇapa", "bhara", "[t]", "sāriputta", "ssa", "muru", "bhallika", "ānaṃ > aṃ", "[n]", "tara", "tha", "to", "tā", "udāyī", "uṃ", "biḷi"
+		"", "ā", "a", "tta", "tā", "vasena", "ādi", "aṃ", "āni", "ka", "na", "ena", "ta", "na > a", "eta", "ya", "ima", "ehi", "saṃ", "tumha", "sa", "ka > ki", "e", "āya", "mhā", "ū", "so", "i", "āhi", "me", "smā", "vant", "issā", "eyya", "nagaravinda", "esānaṃ", "ssaṃ", "ākaṃ", "esaṃ", "*a", "[d]", "vāja", "sara", "kuṇapa", "bhara", "[t]", "sāriputta", "ssa", "muru", "bhallika", "ānaṃ > aṃ", "[n]", "tara", "tha", "to", "tā", "udāyī", "uṃ", "biḷi", "esānaṃ > esaṃ", "na > an", "ra", "dhā", "mhi", "bhara > bhāra", "ci", "ayā", "[h]", "esu", "kāḷī", "paññāya", "siṅgālaka", "pa", "vi", "su", "mati", "masāra", "vassa", "kuvera", "ā > a", "(n)a"
 		]
 	
-	no_thanks = ["sutta", "sikkhāpada", "ti", "smiṃ", "m", "ssā", "pāḷi", "nikāya"]
+	no_thanks = ["sutta", "sikkhāpada", "ti", "smiṃ",
+              "m", "ssā", "pāḷi", "nikāya", "saṃyutta"]
 	wic_dict = {}
 	
 	for row in range(filter_df_len):
@@ -1491,7 +1501,7 @@ def add_family2():
 def test_family2(dpd_df, dpd_df_length):
 	print(f"{timeis()} {green}testing if words in construction are in family2", end=" ")
 
-	exceptions = ["accha", "an", "ana", "asa", "asati", "atta", "attha", "aṭṭha", "du", "dha", "dhā", "dur", "iṃ", "jāni", "jāniya", "kaccha", "kha", "kuttaka", "kā", "mi", "nettika", "nā", "ma", "pa", "anāsava", "pati", "paṭi", "eyya", "sa", "revata", "santi", "satimant", "subhaddā", "bhūma", "niggahita", "nālaka", "sammatta", "seṭṭhi", "ssa", "bhisakka", "sumaṅgala", "susaṇṭhita", "asita", "tara", "teja", "tha", "to", "tā", "tāla", "udāyī", "ukkhittaka", "upanisā", "upanāyika", "upasagga", "uṃ", "vaca", "veyyākaraṇa", "veṇḍu", "vīta", "īya", "ṇaya", "ṇu"
+	exceptions = ["accha", "an", "ana", "asa", "asati", "atta", "attha", "aṭṭha", "du", "dha", "dhā", "dur", "iṃ", "jāni", "jāniya", "kaccha", "kha", "kuttaka", "kā", "mi", "nettika", "nā", "ma", "pa", "anāsava", "pati", "paṭi", "eyya", "sa", "revata", "santi", "satimant", "subhaddā", "bhūma", "niggahita", "nālaka", "sammatta", "seṭṭhi", "ssa", "bhisakka", "sumaṅgala", "susaṇṭhita", "asita", "tara", "teja", "tha", "to", "tā", "tāla", "udāyī", "ukkhittaka", "upanisā", "upanāyika", "upasagga", "uṃ", "vaca", "veyyākaraṇa", "veṇḍu", "vīta", "īya", "ṇaya", "ṇu", "vaṭṭaka", "vibhūta", "vimuttatta", "vāya", "advejjha", "ketuṃ", "sabbato", "selā", "siṅgālaka 1", "kāḷī", "paññāya", "siṅgālaka", "bhaggava", "kalyāṇī", "kalyāṇaṃ", "aṃ", "gayā", "ima", "kukkuka", "madhura", "māgaṇḍiya", "na", 
 	]
 	
 	failures = construction_does_not_equal_family2(
@@ -1503,6 +1513,7 @@ def test_family2(dpd_df, dpd_df_length):
 
 	txt_file1.write(f"\n{line_break}\nwords in comps not in family2\n{line_break}\n")
 	txt_file2.write(f"\n{line_break}\nwords in comps not in family2\n{line_break}\n")
+	txt_file1.write(f"1. Pāli1 contains x\n2. OR construction contains x\n\n")
 
 	counter = 0
 	for word in failures:
@@ -1652,15 +1663,66 @@ def family2_no_meaning():
 			if len(needs_meaning) == 1:
 				txt_file1.write(f"\n{line_break}\nfamily2 no meaning\n{line_break}\n")
 				txt_file2.write(f"\n{line_break}\nfamily2 no meaning\n{line_break}\n")
+				txt_file1.write(f"1. Pāli1 contains x\n2. OR Family2 contains x\n\n")
 
-			if counter < 10:
-				txt_file1.write(fr"\b{headword}\b\n")
-			txt_file2.write(fr"\b{headword}\b\n")
+			if counter < 5:
+				txt_file1.write(f"\\b{headword}\\b\n")
+			txt_file2.write(f"\\b{headword}\\b\n")
 	
 			counter+=1
 
 	txt_file1.write(f"{len(needs_meaning)}\n")
 	# write_all_words(needs_meaning, txt_file1, txt_file2)
+	txt_file1.close()
+	txt_file2.close()
+
+
+def family2_is_empty():
+	print(f"{timeis()} {green}family2 is empty")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+
+	test1 = dpd_df["Meaning IN CONTEXT"] != ""
+	test2 = dpd_df["Construction"].str.contains("\\+")
+	test3 = dpd_df["Family2"] == ""
+	test4 = dpd_df["Pāli Root"] == ""
+	test5 =~dpd_df["Grammar"].str.contains("\b(nom|acc|instr|dat|abl|gen|loc|voc)\b")
+	test6 = dpd_df["Word Family"] == ""
+	test7 = ~dpd_df["Construction"].str.contains("(sikkhāpada|sutta)\\b")
+	test8 = dpd_df["Pāli1"].str.len() < 30
+	test9 = ~dpd_df["Grammar"].str.contains("onom")
+	test10 = ~dpd_df["Category"].str.contains("names")
+
+	filter = test1 & test2 & test3 & test4 & test5 & test6 & test7 & test8 & test9 & test10 
+
+	filter_df = dpd_df[filter]
+	filter_df = filter_df.reset_index()
+
+	counter = 0
+	all_words = []
+	exceptions = ["bhabbhara", "bharabhara", "avadāniya", "bhaggā", "bhārukacchaka", "bumū", "bhesajja", "avadāniya", "bhaggā", "bhārukacchaka", "bhesajja", "bumū"
+	
+	]
+
+	for row in range(len(filter_df)):
+		headword = filter_df.loc[row, "Pāli1"]
+		construction = filter_df.loc[row, "Construction"]
+		meaning = filter_df.loc[row, "Meaning IN CONTEXT"]
+
+		if counter == 0:
+			txt_file1.write(f"\n{line_break}\nfamily2 is empty ({len(filter_df)})\n{line_break}\n")
+			txt_file2.write(f"\n{line_break}\nfamily2 is empty ({len(filter_df)})\n{line_break}\n")
+
+		if counter < 10 and \
+		headword not in exceptions:
+			txt_file1.write(f"{headword}\t{construction}\t{meaning}\n")
+		txt_file2.write(f"{headword}\t{construction}\t{meaning}\n")
+		all_words.append(headword)
+		
+		counter += 1
+
+	write_all_words(all_words, txt_file1, txt_file2)
 	txt_file1.close()
 	txt_file2.close()
 
@@ -1719,7 +1781,19 @@ def find_variants_and_synonyms():
 		"name of a chieftain",
 		"family name",
 		"name of one the seven Bharata kings",
-
+		"name of a village in Sri Lanka",
+		"name of a prince",
+		"venerable; reverend",
+		"type of couch",
+		"and inclined towards; and wanting; accompanied with lust",
+		"and disinclined; and averse; and accompanied with aversion", 
+		"name of a royal family of serpents",
+		"family name; example of a low name",
+		"name of a type of elephant",
+		"name of a young Brahman",
+		"name of a minister",
+		"name of a demigod",
+		
 		]
 
 	# builds a dict of meaning: {pos:[headwords], pos:[headwords]}
@@ -1774,7 +1848,7 @@ def find_variants_and_synonyms():
 					set(clean_headwords) != set(variants) and \
 					not set(clean_headwords).issubset(set(variants)):
 					var_counter += 1
-					if counter < 20:
+					if counter < 10:
 						txt_file1.write(f"{meaning}\n")
 						txt_file1.write(f"^(")
 						for headword in headwords:
@@ -1796,6 +1870,295 @@ def find_variants_and_synonyms():
 	txt_file2.close()
 
 
+def find_word_families():
+	print(f"{timeis()} {green}finding word families", end=" ")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	txt_file1.write(f"\n{line_break}\nfind word families\n{line_break}\n")
+	txt_file2.write(f"\n{line_break}\nfind word families\n{line_break}\n")
+
+	families_dict = {}
+	exceptions = [
+	]
+    
+	# build a dict of family2 with 
+	# 1. no comp in gramnar
+	# 2. no root: 
+	# family2: [headword1, headword2, etc]
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		headword_clean = re.sub(" \\d*$", "", headword)
+		pos = dpd_df.loc[row, "POS"]
+		grammar = dpd_df.loc[row, "Grammar"]
+		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
+		root = dpd_df.loc[row, "Pāli Root"]
+		family2 = dpd_df.loc[row, "Family2"]
+		family2_list = family2.split(" ")
+		word_family = dpd_df.loc[row, "Word Family"]
+
+		test1 = word_family == ""
+		test2 = family2 != ""
+		test3 = not re.findall("\\bcomp\\b", grammar)
+		test4 = root == ""
+		test5 = not any(item in family2_list for item in exceptions)
+		test6 = not re.findall("idiom|sandhi", pos)
+		# test7 = meaning != ""
+
+		if test1 & test2 & test3 & test4 & test5 & test6: # & test7:
+			for fam2item in family2_list:
+				if fam2item not in families_dict:
+					families_dict[fam2item] = [headword]
+				else:
+					families_dict[fam2item] += [headword]
+	
+	print(f"{white}{len(families_dict)}")
+	txt_file1.write(f"1. make sure none of these words are compounds\n")
+	txt_file1.write(f"2. check words must remain in family2\n")
+	txt_file1.write(f"3. only one word in family2 if not a compound\n\n")
+
+	for i in range(5):
+		top_word = max(families_dict, key=lambda x: len(families_dict[x]))
+		
+		txt_file1.write(f"{top_word}\n^(")
+		txt_file2.write(f"{top_word}\n^(")
+		for item in families_dict[top_word]:
+			if item != families_dict[top_word][-1]:
+				txt_file1.write(f"{item}|")
+				txt_file2.write(f"{item}|")
+			else:
+				txt_file1.write(f"{item})$\n\n")
+				txt_file2.write(f"{item})$\n\n")
+
+		families_dict.pop(top_word)
+
+	txt_file1.write(f"{len(families_dict)}\n\n")
+	txt_file2.write(f"{len(families_dict)}\n\n")
+	txt_file1.close()
+	txt_file2.close()
+
+
+def find_word_families2():
+	print(f"{timeis()} {green}finding more word families")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	txt_file1.write(f"\n{line_break}\nfinding more word families\n{line_break}\nPāli1 contains x\n")
+	txt_file2.write(f"\n{line_break}\nfinding more word families\n{line_break}\n")
+
+	word_families_set = []
+	exceptions = [
+		"adhi",
+		"ati",
+		"anu",
+		"pa",
+		"saṃ",
+		"ka",
+		"vi",
+		"pati",
+		"ta",
+		"ya",
+		"upa",
+		"ti",
+		"ava",
+		"na",
+		"ku",
+		"kasāya",
+		"dhanvana",
+		"dhanu",
+		"soṇita",
+		"sa"
+
+	]
+
+	# make a list all word families
+
+	for row in range(dpd_df_length):
+		word_families = dpd_df.loc[row, "Word Family"].split()
+		for word in word_families:
+			word = re.sub("\\d*$", "", word)
+			word_families_set.append(word)
+	word_families_set = set(word_families_set)
+	word_families_set = word_families_set - set(exceptions)
+
+	# find all headwords where
+	# 1. not compound
+	# 2. word familiy is in construction
+	# 3. root is empty
+
+	counter = 0
+
+	for word in word_families_set:
+		if counter < 1000:
+			test1 = ~dpd_df["Grammar"].str.contains("\\bcomp\\b")
+			test2 = dpd_df["Construction"].str.contains(f"\\b{word}\\b")
+			test3 = dpd_df["Word Family"] == ""
+			test4 = dpd_df["Pāli Root"] == ""
+			test5 = ~dpd_df["Grammar"].str.contains("\\bdeno\\b")
+			test6 = ~dpd_df["POS"].str.contains("sandhi|idiom")
+
+			filter = test1 & test2 & test3 & test4 & test5 & test6
+			filtered_df = dpd_df[filter]
+			headwords = filtered_df["Pāli1"].to_list()
+
+			if len(headwords) != 0:
+				txt_file1.write(f"{word}\n")
+				txt_file1.write(f"\\b{word}\\b|^(")
+				for headword in headwords:
+					if headword != headwords[-1]:
+						txt_file1.write(f"{headword}|")
+					else:
+						txt_file1.write(f"{headword})$\n\n")
+				counter+= 1
+
+	txt_file1.close()
+	txt_file2.close()
+
+
+def find_word_families3():
+	print(f"{timeis()} {green}finding more word families, the word itself")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	txt_file1.write(
+		f"\n{line_break}\nfinding more word families, the word itself\n{line_break}\n")
+	txt_file2.write(
+		f"\n{line_break}\nfinding more word families, the word itself\n{line_break}\n")
+
+	word_families_set = []
+	exceptions = []
+
+	# make a list all word families
+	
+	for row in range(dpd_df_length):
+		word_families = dpd_df.loc[row, "Word Family"].split()
+		for word in word_families:
+			word = re.sub("\\d*$", "", word)
+			word_families_set.append(word)
+	word_families_set = set(word_families_set)
+	word_families_set = word_families_set - set(exceptions)
+
+	# check if headword has word family
+	missing_word_family = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		headword_clean = re.sub(" \\d*S", "", headword)
+		word_family = dpd_df.loc[row, "Word Family"]
+
+		test1 = headword_clean in word_families_set
+		test2 = word_family == ""
+
+		if test1 & test2:
+			missing_word_family += [headword]
+	
+	if len(missing_word_family) >= 10:
+		length = 10
+	else:
+		length = len(missing_word_family)
+
+	counter = 1
+	if len(missing_word_family) > 0:
+		txt_file1.write(f"\\b(")
+	for word in missing_word_family:
+		if counter < length:
+			txt_file1.write(f"{word}|")
+			counter += 1
+		if counter == length:
+			txt_file1.write(f"{word})\\b")
+
+	txt_file1.close()
+	txt_file2.close()
+
+
+def allowable_prefixes():
+	print(f"{timeis()} {green}finding irregular prefixes")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	allowable_prefixes = ['abhi', 'adhi', 'anu', 'apa', 'api', 'ati', 'ava', 'ni', 'nī', 'pa', 'pari', 'parā', 'pati', 'prati', 'sad', 'saṃ', 'ud', 'upa', 'vi', 'ā', "√"]
+	errors = {}
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		family = dpd_df.loc[row, "Family"]
+		family_split = family.split()
+		for split in family_split:
+			t1 = not "√" in split
+			t2 = split not in allowable_prefixes
+			if t1 & t2:
+				errors[headword] = family
+
+	all_words = []
+	
+	if len(errors) > 0:
+		txt_file1.write(
+		f"\n{line_break}\nroot family prefix errors\n{line_break}\n")
+		txt_file2.write(
+		f"\n{line_break}\nroot family prefix errors\n{line_break}\n")
+		for headword, family in errors.items():
+			txt_file1.write(f"{headword}\t{family}\n")
+			txt_file2.write(f"{headword}\t{family}\n")
+			all_words.append(headword)
+
+	write_all_words(all_words, txt_file1, txt_file2)
+
+	txt_file1.close()
+	txt_file2.close()
+
+
+def words_in_family2_not_in_dpd():
+	print(f"{timeis()} {green}finding words in family2 not in dpd headwords")
+
+	txt_file1 = open("output/test_results.txt", 'a')
+	txt_file2 = open("output/test_results_all.txt", 'a')
+	
+	all_headwords = set()
+	all_family2 = set()
+	errors = set()
+	exceptions = []
+
+	for row in range(dpd_df_length):
+		headword = dpd_df.loc[row, "Pāli1"]
+		headword_clean = re.sub(" \\d*$", "", headword)
+		meaning = dpd_df.loc[row, "Meaning IN CONTEXT"]
+		if meaning != "":
+			all_headwords.add(headword_clean)
+
+		family2 = dpd_df.loc[row, "Family2"]
+		family2_split = family2.split()
+		for split in family2_split:
+			split_clean = re.sub("\\d*$", "", split)
+			all_family2.add(split_clean)
+
+	for word in all_family2:
+		if word not in all_headwords:
+			if word not in exceptions:
+				errors.add(word)
+	
+	all_words = []
+	counter = 0
+
+	if len(errors) > 0:
+		txt_file1.write(
+            f"\n{line_break}\nfamily2 not in dpd\n{line_break}\n")
+		txt_file2.write(
+            f"\n{line_break}\nfamily2 not in dpd\n{line_break}\n")
+	for word in errors:
+		if counter < 10:
+			txt_file1.write(f"\\b({word})\\b\n")
+		txt_file2.write(f"\\b({word})\\b\n")
+		all_words.append(word)
+		counter +=1
+
+	txt_file1.write(f"{len(errors)}")
+	txt_file2.write(f"{len(errors)}")
+	write_all_words(list(errors), txt_file1, txt_file2)
+
+	txt_file1.close()
+	txt_file2.close()
+
 
 tic()
 make_new_dpd_csv()
@@ -1809,7 +2172,6 @@ test_construction_line1_matches_pāli1()
 test_construction_line2_matches_pāli1()
 missing_number()
 extra_number()
-derived_from_in_headwords()
 pali_words_in_english_meaning()
 run_test_formulas()
 test_derived_from_in_family2()
@@ -1827,9 +2189,16 @@ random_words()
 add_family2()
 test_family2(dpd_df, dpd_df_length)
 family2_no_meaning()
+family2_is_empty()
+words_in_family2_not_in_dpd()
 test_base_eqals_construction()
 add_commentary_definitions()
 find_variants_and_synonyms()
+find_word_families()
+find_word_families2()
+find_word_families3()
+allowable_prefixes()
+
 
 print_columns()
 open_test_results()
@@ -1839,3 +2208,4 @@ toc()
 # reset_lastrun()
 # derivatives_in_compounds()
 # identical_meanings()
+# derived_from_in_headwords()
