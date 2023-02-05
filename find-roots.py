@@ -7,7 +7,7 @@ def setup_dpd_df():
 	print(f"{timeis()} {green}importing dpd.csv", end=" ")
 	dpd_df = pd.read_csv("../csvs/dpd.csv", sep="\t", dtype=str, skip_blank_lines=False)
 	dpd_df.fillna("", inplace=True)
-	dpd_df['Pāli3'] = dpd_df['Pāli1'].str.replace(" \d*$", "", regex=True)
+	dpd_df['Pāli3'] = dpd_df['Pāli1'].str.replace(" \\d.*$", "", regex=True)
 	dpd_df_length = len(dpd_df)
 	print(f"{white}{dpd_df.shape}")
 	return dpd_df

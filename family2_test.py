@@ -33,7 +33,7 @@ def generate_lists(dpd_df, dpd_df_len, exceptions):
 	
 	for row in range(dpd_df_len):
 		pali = dpd_df.loc[row, "Pāli1"]
-		pali_clean = re.sub (r" \d*$", "", pali)
+		pali_clean = re.sub (r" \\d.*$", "", pali)
 		grammar = dpd_df.loc[row, "Grammar"]
 		base = dpd_df.loc[row, "Base"]
 		construction = dpd_df.loc[row, "Construction"]
